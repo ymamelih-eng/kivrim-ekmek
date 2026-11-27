@@ -86,7 +86,11 @@ const requests = [
     form.querySelector<HTMLInputElement>('[data-talep-input]')!.value = t;
     form.querySelector('[data-talep-title]')!.textContent = t;
   };
-  setTalep(new URLSearchParams(location.search).get('talep') || '');
+  const qs = new URLSearchParams(location.search);
+  setTalep(qs.get('talep') || '');
+  const urun = qs.get('urun');
+  const msg = form?.querySelector<HTMLTextAreaElement>('textarea[name=mesaj]');
+  if (urun && msg && !msg.value) msg.value = `İlgilendiğim ürün: ${urun}`;
   document.querySelectorAll<HTMLElement>('[data-talep]').forEach((a) => a.addEventListener('click', () => setTalep(a.dataset.talep!)));
   form?.addEventListener('kv:sent', () => { setTalep('Görüşme talebi'); form.querySelector<HTMLElement>('[data-tab]')?.click(); });
 </script>

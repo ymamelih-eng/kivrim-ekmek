@@ -1,7 +1,10 @@
 ---
+import { SHOP_ENABLED as __SHOP } from '../lib/site';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { DEMO_MODE, SHOP_ENABLED, EMAIL } from '../lib/site';
+// Mağaza kapalıyken bu sayfa yayınlanmaz; toptan satış sayfasına yönlendirilir.
+if (!__SHOP) return Astro.redirect('/isletmeler');
 ---
 <Base title="Ödeme | KIVRIM" description="Siparişinizi tamamlayın." path="/odeme" noindex newsletter={false}>
   {SHOP_ENABLED ? (

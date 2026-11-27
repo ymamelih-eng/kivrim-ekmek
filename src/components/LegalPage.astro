@@ -5,10 +5,11 @@ import PageHead from './PageHead.astro';
 import HelpCard from './HelpCard.astro';
 import { render } from 'astro:content';
 import { getLegal } from '../lib/catalog';
+import { SHOP_ENABLED, SHOP_ONLY_PATHS } from '../lib/site';
 interface Props { path: string }
 const { path } = Astro.props;
-const all = await getLegal();
-const doc = all.find((d) => d.data.path === path)!;
+const all = (await getLegal()).filter((d) => SHOP_ENABLED || !SHOP_ONLY_PATHS.includes('/' + d.data.path));
+const doc = (await getLegal()).find((d) => d.data.path === path)!;
 const { Content } = await render(doc);
 ---
 <Base title={`${doc.data.title} | KIVRIM`} description={doc.data.lead} path={`/${path}`} breadcrumb={[{ name: doc.data.title }]}>

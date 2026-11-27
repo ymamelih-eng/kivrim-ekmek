@@ -1,8 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { loadEnv } from 'vite';
 import sitemap from '@astrojs/sitemap';
 
-const NOINDEX = ['/hesabim', '/odeme', '/siparis-onayi', '/404'];
+const env = loadEnv(process.env.NODE_ENV || 'production', process.cwd(), 'PUBLIC_');
+const SHOP = ['1', 'true', 'yes', 'on'].includes(String(process.env.PUBLIC_SHOP_ENABLED ?? env.PUBLIC_SHOP_ENABLED ?? '').toLowerCase());
+// Arama motorlarına kapalı sayfalar; mağaza kapalıyken mesafeli satış sözleşmesi de (yönlendirme sayfası)
+const NOINDEX = ['/hesabim', '/odeme', '/siparis-onayi', '/404', ...(SHOP ? [] : ['/mesafeli-satis-sozlesmesi'])];
 
 export default defineConfig({
   site: 'https://www.kivrimekmek.com',

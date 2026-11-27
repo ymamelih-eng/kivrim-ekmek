@@ -53,7 +53,7 @@ Yeni ikon kullandıysanız `npm run icons` çalıştırın (Google Fonts alt kü
 
 | Değişken | Varsayılan | Açıklama |
 |---|---|---|
-| `PUBLIC_SHOP_ENABLED` | `false` | `true`: sepet, fiyat, adet, ödeme görünür. `false`: yerine "Toptan bilgi al" / "Nereden alırım?" |
+| `PUBLIC_SHOP_ENABLED` | `false` | **Şu anki mod (`false`): yalnızca toptan satış.** Fiyat, sepet, hesap ve ödeme gizlenir; header'da "Toptan teklif al", ürünlerde "Toptan bilgi al" / "Nereden alırım?" görünür. `/hesabim`, `/odeme`, `/siparis-onayi`, `/mesafeli-satis-sozlesmesi` → `/isletmeler`'e yönlenir ve site haritasına girmez. `true`: online satış açılır |
 | `PUBLIC_FORM_ENDPOINT` | — | Form servisi (Web3Forms, Formspree, Getform…). Boşsa formlar `mailto:` ile e-posta uygulamasını açar |
 | `PUBLIC_FORM_ACCESS_KEY` | — | Web3Forms erişim anahtarı (herkese açık anahtar, gizli değildir) |
 | `PUBLIC_NEWSLETTER_ENDPOINT` | — | Bülten için ayrı uç nokta (boşsa form uç noktası) |

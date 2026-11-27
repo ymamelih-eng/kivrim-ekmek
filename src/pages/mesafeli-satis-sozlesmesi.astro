@@ -1,4 +1,7 @@
 ---
+import { SHOP_ENABLED as __SHOP } from '../lib/site';
 import LegalPage from '../components/LegalPage.astro';
+// Mağaza kapalıyken bu sayfa yayınlanmaz; toptan satış sayfasına yönlendirilir.
+if (!__SHOP) return Astro.redirect('/isletmeler');
 ---
 <LegalPage path="mesafeli-satis-sozlesmesi" />

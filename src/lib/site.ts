@@ -35,8 +35,11 @@ export const MENU = [
   ...NAV,
   { href: '/rehber', label: 'Lavaş Rehberi' },
   { href: '/sss', label: 'Sıkça Sorulan Sorular' },
-  { href: '/hesabim', label: 'Hesabım' },
+  ...(SHOP_ENABLED ? [{ href: '/hesabim', label: 'Hesabım' }] : [{ href: '/isletmeler#talep', label: 'Toptan teklif al' }]),
 ];
+
+/** Mağaza kapalıyken yayınlanmayan sayfalar (yönlendirilir, site haritasına girmez). */
+export const SHOP_ONLY_PATHS = ['/hesabim', '/odeme', '/siparis-onayi', '/mesafeli-satis-sozlesmesi'];
 
 // Bağlantılar henüz belirlenmedi — hesaplar açıldığında doldurun.
 export const SOCIALS = [

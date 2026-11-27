@@ -1,28 +1,120 @@
 {
   "home": [
-    { "q": "Lavaş ile tortilla arasındaki fark nedir?", "a": "Lavaş daha ince ve esnek yapısıyla dürüm ve kahvaltılar için idealdir. Tortilla ise daha yumuşak dokusuyla wrap ve quesadilla gibi tariflerde öne çıkar." },
-    { "q": "Lavaş nasıl saklanmalı?", "a": "Serin ve kuru bir yerde, ambalajı kapalı olarak saklayınız. Açıldıktan sonra ağzını kapatıp kısa sürede tüketiniz." },
-    { "q": "Online sipariş verebilir miyim?", "a": "Evet. Ürünlerimizi sepete ekleyerek online mağazamızdan güvenli ödeme ile sipariş verebilirsiniz.", "shopOnly": true },
-    { "q": "Toptan alım yapılabiliyor mu?", "a": "Restoran, kafe, market ve dağıtım firmaları için İşletmeler İçin sayfasından bizimle iletişime geçebilirsiniz." }
+    {
+      "q": "Lavaş ile tortilla arasındaki fark nedir?",
+      "a": "Lavaş daha ince ve esnek yapısıyla dürüm ve kahvaltılar için idealdir. Tortilla ise daha yumuşak dokusuyla wrap ve quesadilla gibi tariflerde öne çıkar."
+    },
+    {
+      "q": "Lavaş nasıl saklanmalı?",
+      "a": "Serin ve kuru bir yerde, ambalajı kapalı olarak saklayınız. Açıldıktan sonra ağzını kapatıp kısa sürede tüketiniz."
+    },
+    {
+      "q": "Online sipariş verebilir miyim?",
+      "a": "Evet. Ürünlerimizi sepete ekleyerek online mağazamızdan güvenli ödeme ile sipariş verebilirsiniz.",
+      "shopOnly": true
+    },
+    {
+      "q": "Toptan alım yapılabiliyor mu?",
+      "a": "Restoran, kafe, market ve dağıtım firmaları için İşletmeler İçin sayfasından bizimle iletişime geçebilirsiniz."
+    }
   ],
   "groups": [
-    { "title": "Ürünler", "icon": "bakery_dining", "bg": "#FDEBD9", "color": "#C75F08", "items": [
-      { "q": "Lavaş ile tortilla arasındaki fark nedir?", "a": "Lavaş daha ince ve esnek yapısıyla dürüm ve kahvaltılar için idealdir. Tortilla ise daha yumuşak dokusuyla wrap ve quesadilla gibi tariflerde öne çıkar." },
-      { "q": "Ürünlerin içindekiler bilgisine nereden ulaşabilirim?", "a": "Her ürünün içindekiler listesi, besin değerleri ve alerjen bilgisi ürün sayfasında ve ambalaj üzerinde yer alır." },
-      { "q": "Ürünlerin raf ömrü ne kadar?", "a": "Raf ömrü ürüne göre değişir; son tüketim tarihi her paketin üzerinde belirtilir." },
-      { "q": "Glutensiz ürününüz var mı?", "a": "Mevcut ürünlerimizin tamamı buğday unu ile hazırlanır ve gluten içerir." } ] },
-    { "title": "Sipariş ve teslimat", "icon": "local_shipping", "bg": "#E6F2DA", "color": "#087238", "items": [
-      { "q": "Siparişim ne zaman kargoya verilir?", "a": "Hafta içi saat 14:00’e kadar verilen siparişler aynı gün, sonrasında verilenler ertesi iş günü kargoya teslim edilir." },
-      { "q": "Kargo ücreti ne kadar?", "a": "₺300 ve üzeri siparişlerde kargo ücretsizdir. Altındaki siparişlerde kargo ücreti ödeme adımında gösterilir." },
-      { "q": "Siparişimi nasıl takip ederim?", "a": "Hesabım > Siparişlerim bölümünden ve size gönderilen e-postadaki takip bağlantısından siparişinizi izleyebilirsiniz." },
-      { "q": "Hangi ödeme yöntemlerini kabul ediyorsunuz?", "a": "Kredi kartı ve banka kartı ile güvenli ödeme yapabilirsiniz." } ] },
-    { "title": "Saklama ve kullanım", "icon": "kitchen", "bg": "#FBF1D3", "color": "#8A6410", "items": [
-      { "q": "Lavaş nasıl saklanmalı?", "a": "Serin ve kuru bir yerde, ambalajı kapalı olarak saklayınız. Açıldıktan sonra ağzını kapatıp kısa sürede tüketiniz." },
-      { "q": "Lavaş dondurulabilir mi?", "a": "Evet. Aralarına yağlı kâğıt koyarak dondurabilir, kullanmadan önce oda sıcaklığında çözdürebilirsiniz." },
-      { "q": "Lavaşı nasıl ısıtmalıyım?", "a": "Kuru ve sıcak bir tavada her yüzünü 15–20 saniye ısıtmanız yeterlidir." } ] },
-    { "title": "İşletmeler", "icon": "storefront", "bg": "#F3E7DA", "color": "#A8401C", "items": [
-      { "q": "Toptan alım yapılabiliyor mu?", "a": "Restoran, kafe, market ve dağıtım firmaları için İşletmeler İçin sayfasından bizimle iletişime geçebilirsiniz." },
-      { "q": "Numune talep edebilir miyim?", "a": "Evet, işletmeler için seçilen ürünlerden numune gönderimi yapıyoruz." },
-      { "q": "Minimum sipariş miktarı nedir?", "a": "Minimum sipariş miktarı ürün çeşidine ve teslimat bölgesine göre belirlenir." } ] }
+    {
+      "title": "Ürünler",
+      "icon": "bakery_dining",
+      "bg": "#FDEBD9",
+      "color": "#C75F08",
+      "items": [
+        {
+          "q": "Lavaş ile tortilla arasındaki fark nedir?",
+          "a": "Lavaş daha ince ve esnek yapısıyla dürüm ve kahvaltılar için idealdir. Tortilla ise daha yumuşak dokusuyla wrap ve quesadilla gibi tariflerde öne çıkar."
+        },
+        {
+          "q": "Ürünlerin içindekiler bilgisine nereden ulaşabilirim?",
+          "a": "Her ürünün içindekiler listesi, besin değerleri ve alerjen bilgisi ürün sayfasında ve ambalaj üzerinde yer alır."
+        },
+        {
+          "q": "Ürünlerin raf ömrü ne kadar?",
+          "a": "Raf ömrü ürüne göre değişir; son tüketim tarihi her paketin üzerinde belirtilir."
+        },
+        {
+          "q": "Glutensiz ürününüz var mı?",
+          "a": "Mevcut ürünlerimizin tamamı buğday unu ile hazırlanır ve gluten içerir."
+        }
+      ]
+    },
+    {
+      "title": "Sipariş ve teslimat",
+      "icon": "local_shipping",
+      "bg": "#E6F2DA",
+      "color": "#087238",
+      "items": [
+        {
+          "q": "Siparişim ne zaman kargoya verilir?",
+          "a": "Hafta içi saat 14:00’e kadar verilen siparişler aynı gün, sonrasında verilenler ertesi iş günü kargoya teslim edilir."
+        },
+        {
+          "q": "Kargo ücreti ne kadar?",
+          "a": "₺300 ve üzeri siparişlerde kargo ücretsizdir. Altındaki siparişlerde kargo ücreti ödeme adımında gösterilir."
+        },
+        {
+          "q": "Siparişimi nasıl takip ederim?",
+          "a": "Hesabım > Siparişlerim bölümünden ve size gönderilen e-postadaki takip bağlantısından siparişinizi izleyebilirsiniz."
+        },
+        {
+          "q": "Hangi ödeme yöntemlerini kabul ediyorsunuz?",
+          "a": "Kredi kartı ve banka kartı ile güvenli ödeme yapabilirsiniz."
+        }
+      ],
+      "shopOnly": true
+    },
+    {
+      "title": "Saklama ve kullanım",
+      "icon": "kitchen",
+      "bg": "#FBF1D3",
+      "color": "#8A6410",
+      "items": [
+        {
+          "q": "Lavaş nasıl saklanmalı?",
+          "a": "Serin ve kuru bir yerde, ambalajı kapalı olarak saklayınız. Açıldıktan sonra ağzını kapatıp kısa sürede tüketiniz."
+        },
+        {
+          "q": "Lavaş dondurulabilir mi?",
+          "a": "Evet. Aralarına yağlı kâğıt koyarak dondurabilir, kullanmadan önce oda sıcaklığında çözdürebilirsiniz."
+        },
+        {
+          "q": "Lavaşı nasıl ısıtmalıyım?",
+          "a": "Kuru ve sıcak bir tavada her yüzünü 15–20 saniye ısıtmanız yeterlidir."
+        }
+      ]
+    },
+    {
+      "title": "İşletmeler",
+      "icon": "storefront",
+      "bg": "#F3E7DA",
+      "color": "#A8401C",
+      "items": [
+        {
+          "q": "Ürünleri nereden satın alabilirim?",
+          "a": "Ürünlerimiz şu an toptan satış kanalıyla sunuluyor. Market, restoran ve dağıtım işletmeleri İşletmeler İçin sayfasından teklif isteyebilir; satış noktası bilgisi için bize yazabilirsiniz."
+        },
+        {
+          "q": "Toptan alım yapılabiliyor mu?",
+          "a": "Restoran, kafe, market ve dağıtım firmaları için İşletmeler İçin sayfasından bizimle iletişime geçebilirsiniz."
+        },
+        {
+          "q": "Numune talep edebilir miyim?",
+          "a": "Evet, işletmeler için seçilen ürünlerden numune gönderimi yapıyoruz."
+        },
+        {
+          "q": "Minimum sipariş miktarı nedir?",
+          "a": "Minimum sipariş miktarı ürün çeşidine ve teslimat bölgesine göre belirlenir."
+        },
+        {
+          "q": "Ürün kataloğuna nasıl ulaşabilirim?",
+          "a": "İşletmeler İçin sayfasından ürün kataloğunu indirebilir, teknik föy ve numune talebinde bulunabilirsiniz."
+        }
+      ]
+    }
   ]
 }

@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import Social from './Social.astro';
 import { logo } from '../lib/images';
-import { NAV, EMAIL, ADDRESS, HOURS } from '../lib/site';
+import { NAV, EMAIL, ADDRESS, HOURS, SHOP_ENABLED, CATALOG_URL } from '../lib/site';
 ---
 <footer class="site-footer">
   <div class="ft-blob" aria-hidden="true"></div>
@@ -29,8 +29,7 @@ import { NAV, EMAIL, ADDRESS, HOURS } from '../lib/site';
         <span class="ft-h">YARDIM</span>
         <a href="/sss">Sıkça Sorulan Sorular</a>
         <a href="/rehber">Lavaş Rehberi</a>
-        <a href="/hesabim">Hesabım</a>
-        <a href="/hesabim#siparislerim">Sipariş takibi</a>
+        {SHOP_ENABLED ? <><a href="/hesabim">Hesabım</a><a href="/hesabim#siparislerim">Sipariş takibi</a></> : <><a href="/isletmeler#talep">Toptan teklif al</a><a href={CATALOG_URL} download="KIVRIM-Urun-Katalogu.png">Ürün kataloğu</a></>}
       </div>
       <div class="ft-col ft-contact">
         <span class="ft-h">İLETİŞİM</span>
@@ -44,7 +43,7 @@ import { NAV, EMAIL, ADDRESS, HOURS } from '../lib/site';
       <nav class="ft-legal" aria-label="Yasal">
         <a href="/kvkk">KVKK Aydınlatma</a>
         <a href="/cerez-politikasi">Çerez Politikası</a>
-        <a href="/mesafeli-satis-sozlesmesi">Mesafeli Satış Sözleşmesi</a>
+        {SHOP_ENABLED && <a href="/mesafeli-satis-sozlesmesi">Mesafeli Satış Sözleşmesi</a>}
       </nav>
     </div>
   </div>

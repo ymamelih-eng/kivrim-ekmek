@@ -1,4 +1,5 @@
 ---
+import { SHOP_ENABLED as __SHOP } from '../lib/site';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import PageHead from '../components/PageHead.astro';
@@ -13,6 +14,8 @@ const perks = [
   { i: 'redeem', t: 'Üyelere özel fırsatlar', d: 'Yeni ürünlerden ilk siz haberdar olun.', bg: '#F3E7DA', c: '#A8401C' },
 ];
 const menu = [['siparis', 'Siparişlerim', 'receipt_long'], ['adres', 'Adreslerim', 'home_pin'], ['bilgi', 'Hesap bilgileri', 'person'], ['fav', 'Favori tariflerim', 'favorite']];
+// Mağaza kapalıyken bu sayfa yayınlanmaz; toptan satış sayfasına yönlendirilir.
+if (!__SHOP) return Astro.redirect('/isletmeler');
 ---
 <Base title="Hesabım | KIVRIM" description="Siparişlerinizi takip edin, adreslerinizi ve hesap bilgilerinizi yönetin." path="/hesabim" noindex breadcrumb={[{ name: 'Hesabım' }]}>
   <PageHead bg="#F3ECDF" eyebrow="HESABIM" crumbs={[{ name: 'Hesabım' }]} lead="Siparişlerinizi takip edin, adreslerinizi yönetin ve favori tariflerinize tek yerden ulaşın.">

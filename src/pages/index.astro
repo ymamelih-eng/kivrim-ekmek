@@ -25,7 +25,9 @@ const tabs = [
 const marquee = products.map((p) => p.name);
 const trust = [
   { i: 'verified', t: 'Kalite kontrollü', d: 'Her partide düzenli kontrol', bg: '#E6F2DA', c: '#087238' },
-  { i: 'local_shipping', t: 'Hızlı teslimat', d: 'Türkiye geneline kargo', bg: '#FDEBD9', c: '#C75F08' },
+  SHOP_ENABLED
+    ? { i: 'local_shipping', t: 'Hızlı teslimat', d: 'Türkiye geneline kargo', bg: '#FDEBD9', c: '#C75F08' }
+    : { i: 'storefront', t: 'Toptan tedarik', d: 'Market, restoran ve bayiler için', bg: '#FDEBD9', c: '#C75F08' },
   { i: 'eco', t: 'Taze ambalaj', d: 'Tazeliği koruyan paketleme', bg: '#FBF1D3', c: '#8A6410' },
   { i: 'support_agent', t: 'Bize ulaşın', d: EMAIL, bg: '#F3E7DA', c: '#A8401C' },
 ];

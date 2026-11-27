@@ -234,3 +234,5 @@ html.kv-wipe-in .kv-wipe-b { transform: translateY(0); animation: kvWipeOut .26s
 .mmenu-foot > a { color: var(--cream-accent); text-decoration: none; font-weight: 700; }
 
 body.kv-lock { overflow: hidden; }
+.hdr-b2b { text-decoration: none; }
+.hdr-b2b:hover { color: #fff; background: var(--green); }

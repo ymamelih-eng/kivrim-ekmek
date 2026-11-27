@@ -16,7 +16,8 @@ const active = (href: string) => here === href || here.startsWith(href + '/');
     </nav>
     <div class="hdr-actions">
       <button type="button" class="hdr-sq" aria-label="Ara" data-open-search><Icon name="search" size={26} /></button>
-      <a href="/hesabim" class="hdr-sq" aria-label="Hesabım" data-m="hide-s"><Icon name="person" size={26} /></a>
+      <a href="/hesabim" class="hdr-sq" aria-label="Hesabım" data-m="hide-s" data-shop><Icon name="person" size={26} /></a>
+      <a href="/isletmeler#talep" class="hdr-cart hdr-b2b" data-shopon><Icon name="storefront" size={22} /><span data-m="hide-s">Toptan teklif al</span></a>
       <button type="button" class="hdr-cart" data-shop data-open-cart aria-label="Sepeti aç">
         <Icon name="shopping_bag" size={22} /><span data-m="hide-s">Sepet</span><span class="hdr-count" data-cart-count>0</span>
       </button>

@@ -3,7 +3,9 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import PageHead from '../components/PageHead.astro';
 import HelpCard from '../components/HelpCard.astro';
-import faq from '../data/faq.json';
+import faqData from '../data/faq.json';
+import { SHOP_ENABLED } from '../lib/site';
+const faq = { groups: faqData.groups.filter((g) => SHOP_ENABLED || !('shopOnly' in g && g.shopOnly)) };
 const slug = (s: string) => s.toLocaleLowerCase('tr-TR').replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c').replace(/[^a-z0-9]+/g, '-');
 const jsonLd = [{
   '@context': 'https://schema.org', '@type': 'FAQPage',

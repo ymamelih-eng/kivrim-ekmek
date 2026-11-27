@@ -69,12 +69,17 @@ const description = SHOP_ENABLED
             <button type="button" aria-label="Artır" data-qty-step="1"><Icon name="add" size={24} /></button>
           </div>
           <button data-shop type="button" class="btn btn-ink pd-add" data-cart-add={p.id} data-qty-from="#pd-qty" data-open-after><Icon name="shopping_bag" size={24} />Sepete ekle</button>
-          <a data-shopon href="/isletmeler#talep" class="btn btn-ink pd-alt">Toptan bilgi al<Icon name="arrow_forward" size={22} /></a>
+          <a data-shopon href={`/isletmeler?urun=${encodeURIComponent(p.name)}#talep`} class="btn btn-ink pd-alt">Toptan bilgi al<Icon name="arrow_forward" size={22} /></a>
           <a data-shopon href="/iletisim?konu=Sat%C4%B1%C5%9F%20noktas%C4%B1%20bilgisi" class="btn btn-outline pd-alt2"><Icon name="location_on" size={22} />Nereden alırım?</a>
         </div>
         <div data-m="g3" class="pd-perks">
-          <div><Icon name="local_shipping" size={28} color="#087238" /><b>Hızlı kargo</b></div>
-          <div><Icon name="verified_user" size={28} color="#087238" /><b>Güvenli ödeme</b></div>
+          {SHOP_ENABLED ? <>
+            <div><Icon name="local_shipping" size={28} color="#087238" /><b>Hızlı kargo</b></div>
+            <div><Icon name="verified_user" size={28} color="#087238" /><b>Güvenli ödeme</b></div>
+          </> : <>
+            <div><Icon name="storefront" size={28} color="#087238" /><b>Toptan tedarik</b></div>
+            <div><Icon name="inventory_2" size={28} color="#087238" /><b>Numune gönderimi</b></div>
+          </>}
           <div><Icon name="eco" size={28} color="#087238" /><b>Taze ambalaj</b></div>
         </div>
         <div class="acc pd-acc">
@@ -100,7 +105,7 @@ const description = SHOP_ENABLED
       <div class="facts">
         {facts.map((f) => <div data-m="g2" class="fact"><b><Icon name={f.i} size={24} color="#A8401C" />{f.t}</b><p>{f.v}</p></div>)}
         <div class="facts-ctas">
-          <a href="/isletmeler#talep" class="btn btn-ink"><Icon name="storefront" size={20} />Toptan satın alma</a>
+          <a href={`/isletmeler?urun=${encodeURIComponent(p.name)}#talep`} class="btn btn-ink"><Icon name="storefront" size={20} />Toptan satın alma</a>
           <a href="/isletmeler?talep=Teknik%20%C3%BCr%C3%BCn%20f%C3%B6y%C3%BC#talep" class="btn btn-outline"><Icon name="description" size={20} />Teknik föy talep et</a>
         </div>
       </div>
