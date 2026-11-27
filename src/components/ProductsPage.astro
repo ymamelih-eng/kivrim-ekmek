@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+import ProductCard from './ProductCard.astro';
+import { FAMILIES, getProducts, type Family } from '../lib/catalog';
+import { SITE_URL, SHOP_ENABLED } from '../lib/site';
+interface Props { family: Family; path: string; title: string; description: string }
+const { family, path, title, description } = Astro.props;
+const F = FAMILIES[family];
+const items = (await getProducts()).filter((p) => p.family === family);
+const infoItems = [{ i: 'scale', t: 'Gramaj ve ebat' }, { i: 'receipt_long', t: 'İçindekiler' }, { i: 'nutrition', t: 'Besin değerleri' }, { i: 'kitchen', t: 'Saklama koşulları' }];
+const isRoot = path === '/urunler';
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'CollectionPage', name: title, url: SITE_URL + path,
+  mainEntity: { '@type': 'ItemList', itemListElement: items.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: `${SITE_URL}/urunler/${p.id}` })) },
+}];
+const crumbs = isRoot ? [{ name: 'Ürünler' }] : [{ name: 'Ürünler', href: '/urunler' }, { name: F.title }];
+---
+<Base title={title} description={description} path={path} breadcrumb={crumbs} jsonLd={jsonLd} ogPhoto="tavuklu-wrap">
+  <section class="ihead">
+    <div class="ihead-img"><Photo k="tavuklu-wrap" alt="" sizes="50vw" loading="eager" /></div>
+    <div class="wrap ihead-in">
+      <nav class="crumbs" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a><span>/</span>{isRoot ? <b aria-current="page">Ürünler</b> : <><a href="/urunler">Ürünler</a><span>/</span><b aria-current="page">{F.title}</b></>}</nav>
+      <h1>{isRoot ? 'Ürünler' : F.title}</h1>
+      <p>Klasik, tam buğday ve protein seçenekleriyle. Sofranıza uygun lavaş ve tortillayı seçin{SHOP_ENABLED ? ', kapınıza gelsin' : ''}.</p>
+      <nav class="seg on-white" aria-label="Ürün ailesi">
+        <a href="/urunler/lavas" aria-current={family === 'lavas' ? 'page' : undefined}>Lavaş</a>
+        <a href="/urunler/tortilla" aria-current={family === 'tortilla' ? 'page' : undefined}>Tortilla</a>
+      </nav>
+    </div>
+  </section>
+  <section class="wrap plist">
+    <div data-m="g2" class="plist-grid">
+      <div class="plist-side">
+        <h2>{F.lead} <span class="em">{F.em}</span></h2>
+        <p>{F.desc}</p>
+        <div>
+          {F.feats.map((f) => <div class="feat"><span class="feat-ic"><Icon name={f.i} size={26} /></span><b>{f.t}</b></div>)}
+        </div>
+      </div>
+      <div class="plist-items">
+        {items.map((p) => <ProductCard p={p} variant="list" />)}
+      </div>
+    </div>
+  </section>
+  <section class="wrap info4-sec">
+    <div data-m="g4" class="info4">
+      {infoItems.map((f) => <div><Icon name={f.i} size={28} color="#087238" /><b>{f.t}</b><span>Her ürün sayfasında ayrıntılı olarak.</span></div>)}
+    </div>
+  </section>
+</Base>

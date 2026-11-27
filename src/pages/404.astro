@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+<Base title="Sayfa bulunamadı | KIVRIM" description="Aradığınız sayfa bulunamadı." path="/404" noindex newsletter={false}>
+  <section class="wrap nf">
+    <span class="eyebrow">404</span>
+    <h1>Bu sayfa <span class="em" style="color:#087238">kıvrılıp gitmiş.</span></h1>
+    <p>Aradığınız sayfa taşınmış ya da hiç var olmamış olabilir. Ürünlerimize veya tariflerimize göz atabilirsiniz.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a href="/" class="btn btn-ink" style="padding:16px 24px">Ana sayfa<Icon name="arrow_forward" size={22} /></a>
+      <a href="/urunler" class="btn btn-outline" style="padding:15px 22px">Ürünler</a>
+      <button type="button" class="btn btn-outline" style="padding:15px 22px" data-open-search><Icon name="search" size={22} />Ara</button>
+    </div>
+  </section>
+</Base>

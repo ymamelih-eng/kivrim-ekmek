@@ -1,0 +1,70 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Pack from '../../components/Pack.astro';
+import Photo from '../../components/Photo.astro';
+import { getImage } from 'astro:assets';
+import { photo } from '../../lib/images';
+import { getProduct, getRecipes, recipeTimes, type Recipe } from '../../lib/catalog';
+import { SITE_URL, fmt } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return (await getRecipes()).map((r) => ({ params: { slug: r.id }, props: { r } }));
+}
+const { r } = Astro.props as { r: Recipe };
+const prod = await getProduct(r.product);
+const x = recipeTimes(r);
+const img = await getImage({ src: photo(r.image), width: 1200, format: 'jpg' });
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'Recipe', name: r.title, description: r.intro, image: [new URL(img.src, SITE_URL).href],
+  recipeCategory: r.category, recipeCuisine: 'Türk', prepTime: `PT${x.prep}M`, ...(x.cook ? { cookTime: `PT${x.cook}M` } : {}), totalTime: `PT${r.minutes}M`,
+  recipeYield: `${r.servings} kişilik`, recipeIngredient: r.ingredients,
+  recipeInstructions: r.steps.map((t, i) => ({ '@type': 'HowToStep', position: i + 1, text: t })),
+  author: { '@type': 'Organization', name: 'KIVRIM' }, keywords: [prod.name, r.category, 'lavaş', 'tortilla'].join(', '),
+}];
+---
+<Base title={`${r.title} Tarifi | KIVRIM`} description={`Adım adım ${r.title.toLocaleLowerCase('tr-TR')} tarifi: malzemeler, hazırlanışı ve önerilen KIVRIM ürünü. ${r.intro}`}
+  path={`/tarifler/${r.id}`} ogType="article" ogPhoto={r.image} jsonLd={jsonLd} breadcrumb={[{ name: 'Tarifler', href: '/tarifler' }, { name: r.title }]}>
+  <section class="rhero">
+    <Photo k={r.image} alt={r.title} class={`rhero-img${r.cut ? ' rc-cut' : ''}`} style={r.cut ? `background:${r.bg}` : undefined} loading="eager" fetchpriority="high" />
+    <div class="rhero-tx">
+      <nav class="crumbs" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a>/<a href="/tarifler">Tarifler</a>/<b aria-current="page">{r.title}</b></nav>
+      <h1>{r.title}</h1>
+      <div class="meta-row">
+        <span><Icon name="schedule" size={24} color="#F9DF9D" />{r.minutes} dk</span>
+        <span><Icon name="group" size={24} color="#F9DF9D" />{r.servings} kişilik</span>
+        <span><Icon name="restaurant_menu" size={24} color="#F9DF9D" />{r.category}</span>
+        <span><Icon name="signal_cellular_alt" size={24} color="#F9DF9D" />{x.diff}</span>
+      </div>
+      <div class="rhero-sub">
+        <span>HAZIRLIK {x.prepLabel}</span><span>PİŞİRME {x.cookLabel}</span>
+        <span class="rhero-acts" data-noprint>
+          <button type="button" data-print><Icon name="print" size={20} />Yazdır</button>
+          <button type="button" data-share><Icon name="share" size={20} />Paylaş</button>
+        </span>
+      </div>
+    </div>
+  </section>
+  <section data-m="g2" class="wrap rbody">
+    <aside data-m="sticky" class="rside">
+      <div class="ingr">
+        <h2>Malzemeler</h2>
+        <ul>{r.ingredients.map((g) => <li><Icon name="check_circle" size={22} color="#087238" />{g}</li>)}</ul>
+      </div>
+      <div class="inthis" data-noprint>
+        <Pack k={prod.pack} alt={`${prod.name} ambalajı`} width={192} widths={[192]} sizes="96px" />
+        <div class="inthis-tx">
+          <span class="inthis-k">BU TARİFTE</span>
+          <b><a href={`/urunler/${prod.id}`}>{prod.name}</a></b>
+          <span class="inthis-p" data-shop>{fmt(prod.price)}</span>
+          <button data-shop type="button" class="inthis-btn" data-cart-add={prod.id} data-n="1" data-open-after><Icon name="add_shopping_cart" size={20} />Sepete ekle</button>
+          <a data-shopon href={`/urunler/${prod.id}`} class="inthis-btn">Ürünü incele<Icon name="arrow_forward" size={20} /></a>
+        </div>
+      </div>
+    </aside>
+    <div class="steps">
+      <h2>Hazırlanışı</h2>
+      <ol>{r.steps.map((t, i) => <li><span aria-hidden="true">0{i + 1}</span><p>{t}</p></li>)}</ol>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,131 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Pack from '../../components/Pack.astro';
+import RecipeTile from '../../components/RecipeTile.astro';
+import { getImage } from 'astro:assets';
+import { pack } from '../../lib/images';
+import { FAMILIES, getProducts, getRecipes, type Product } from '../../lib/catalog';
+import { SITE_URL, SHOP_ENABLED, fmt, upperTR } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const products = await getProducts();
+  return products.map((p) => ({ params: { slug: p.id }, props: { p } }));
+}
+const { p } = Astro.props as { p: Product };
+const all = await getProducts();
+const recipes = await getRecipes();
+const F = FAMILIES[p.family];
+const other = p.family === 'lavas' ? 'tortilla' : 'lavas';
+const others = [...all.filter((x) => x.family === p.family && x.id !== p.id), all.find((x) => x.family === other)!];
+const detRec = recipes.filter((r) => r.product === p.id);
+const shownRec = (detRec.length ? detRec : recipes).slice(0, 3);
+
+const info = [
+  { t: 'İçindekiler', v: '[Ürün etiketindeki içindekiler listesi]' },
+  { t: 'Besin değerleri', v: '[100 g için enerji, yağ, karbonhidrat ve protein değerleri]' },
+  { t: 'Saklama koşulları', v: 'Serin ve kuru yerde, ambalajı kapalı olarak saklayınız. Açıldıktan sonra kısa sürede tüketiniz.' },
+  { t: 'Alerjen bilgisi', v: 'Gluten içerir. [Etikete göre diğer alerjenler]' },
+];
+// Besin değerleri laboratuvar onayına kadar boş (—)
+const nutr: [string, string, boolean?][] = [['Enerji', 'kcal / kJ'], ['Yağ', 'g'], ['Doymuş yağ', 'g', true], ['Karbonhidrat', 'g'], ['Şekerler', 'g', true], ['Lif', 'g'], ['Protein', 'g'], ['Tuz', 'g']];
+const facts = [
+  { i: 'grocery', t: 'İçindekiler', v: '[Üretici tarafından onaylanacak içerik listesi]' },
+  { i: 'warning', t: 'Alerjen bilgisi', v: 'Gluten içerir. [Diğer alerjen ve çapraz bulaşma bilgisi eklenecek]' },
+  { i: 'scale', t: 'Gramaj / içerik', v: '[Net ağırlık ve paket içi adet bilgisi]' },
+  { i: 'kitchen', t: 'Saklama', v: 'Serin ve kuru yerde, ambalajı kapalı olarak saklayınız. Açıldıktan sonra ağzını kapatınız.' },
+  { i: 'local_fire_department', t: 'Hazırlama önerisi', v: 'Kuru ve sıcak bir tavada her yüzünü 15–20 saniye ısıtarak esnekliğini artırabilirsiniz.' },
+];
+
+const packImg = await getImage({ src: pack(p.pack), width: 800, format: 'png' });
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'Product', name: p.name, description: p.description, sku: p.id,
+  image: new URL(packImg.src, SITE_URL).href, category: F.title,
+  brand: { '@type': 'Brand', name: 'KIVRIM' },
+  ...(SHOP_ENABLED ? { offers: { '@type': 'Offer', priceCurrency: 'TRY', price: p.price.toFixed(2), availability: 'https://schema.org/InStock', url: `${SITE_URL}/urunler/${p.id}` } } : {}),
+}];
+const title = SHOP_ENABLED ? `${p.name} – Online Sipariş | KIVRIM` : `${p.name} | KIVRIM`;
+const description = SHOP_ENABLED
+  ? `${p.name}: ${p.description} KIVRIM online mağazasından ${fmt(p.price)} fiyatla sipariş verin.`
+  : `${p.name}: ${p.description} İçindekiler, saklama, tarif önerileri ve toptan satış bilgisi.`;
+---
+<Base title={title} description={description} path={`/urunler/${p.id}`} ogType="product" jsonLd={jsonLd}
+  breadcrumb={[{ name: 'Ürünler', href: '/urunler' }, { name: F.title, href: `/urunler/${p.family}` }, { name: p.name }]}>
+  <section class="wrap pd">
+    <nav class="crumbs" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a><span>/</span><a href="/urunler">Ürünler</a><span>/</span><b aria-current="page">{p.name}</b></nav>
+    <div data-m="g2" class="pd-grid">
+      <div class="pd-media" style={`background:${p.tint}`}>
+        <Pack k={p.pack} alt={`${p.name} ambalajı`} class="pd-pack" loading="eager" widths={[400, 560]} sizes="(max-width:900px) 54vw, 30vw" />
+      </div>
+      <div class="pd-info">
+        <span class="range-tag">{upperTR(F.title)}</span>
+        <h1>{p.name}</h1>
+        <p>{p.description}</p>
+        <div class="pd-price" data-shop>{fmt(p.price)}</div>
+        <div class="pd-buy">
+          <div class="qty" data-shop data-qty>
+            <button type="button" aria-label="Azalt" data-qty-step="-1"><Icon name="remove" size={24} /></button>
+            <output id="pd-qty" data-qty-val aria-live="polite">1</output>
+            <button type="button" aria-label="Artır" data-qty-step="1"><Icon name="add" size={24} /></button>
+          </div>
+          <button data-shop type="button" class="btn btn-ink pd-add" data-cart-add={p.id} data-qty-from="#pd-qty" data-open-after><Icon name="shopping_bag" size={24} />Sepete ekle</button>
+          <a data-shopon href={`/isletmeler?urun=${encodeURIComponent(p.name)}#talep`} class="btn btn-ink pd-alt">Toptan bilgi al<Icon name="arrow_forward" size={22} /></a>
+          <a data-shopon href="/iletisim?konu=Sat%C4%B1%C5%9F%20noktas%C4%B1%20bilgisi" class="btn btn-outline pd-alt2"><Icon name="location_on" size={22} />Nereden alırım?</a>
+        </div>
+        <div data-m="g3" class="pd-perks">
+          {SHOP_ENABLED ? <>
+            <div><Icon name="local_shipping" size={28} color="#087238" /><b>Hızlı kargo</b></div>
+            <div><Icon name="verified_user" size={28} color="#087238" /><b>Güvenli ödeme</b></div>
+          </> : <>
+            <div><Icon name="storefront" size={28} color="#087238" /><b>Toptan tedarik</b></div>
+            <div><Icon name="inventory_2" size={28} color="#087238" /><b>Numune gönderimi</b></div>
+          </>}
+          <div><Icon name="eco" size={28} color="#087238" /><b>Taze ambalaj</b></div>
+        </div>
+        <div class="acc pd-acc">
+          {info.map((x) => <details><summary>{x.t}<Icon name="expand_more" size={26} /></summary><p>{x.v}</p></details>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap pd2">
+    <div data-m="g2" class="pd2-grid">
+      <div class="nutr">
+        <h2 class="h-sm">Besin değerleri</h2>
+        <span class="nutr-sub">100 g için ortalama değerler</span>
+        <table>
+          <caption class="sr-only">{p.name} besin değerleri (100 g)</caption>
+          <tbody>
+            {nutr.map(([k, u, sub]) => <tr><th scope="row" class={sub ? 'sub' : undefined}>{sub ? 'bunun ' + k.toLocaleLowerCase('tr-TR') : k}</th><td>— {u}</td></tr>)}
+          </tbody>
+        </table>
+        <div class="note-warn"><Icon name="info" size={20} />Değerler, üretici laboratuvar analizleri onaylandıktan sonra yayımlanacaktır.</div>
+      </div>
+      <div class="facts">
+        {facts.map((f) => <div data-m="g2" class="fact"><b><Icon name={f.i} size={24} color="#A8401C" />{f.t}</b><p>{f.v}</p></div>)}
+        <div class="facts-ctas">
+          <a href={`/isletmeler?urun=${encodeURIComponent(p.name)}#talep`} class="btn btn-ink"><Icon name="storefront" size={20} />Toptan satın alma</a>
+          <a href="/isletmeler?talep=Teknik%20%C3%BCr%C3%BCn%20f%C3%B6y%C3%BC#talep" class="btn btn-outline"><Icon name="description" size={20} />Teknik föy talep et</a>
+        </div>
+      </div>
+    </div>
+    <div class="sec-head sec-head-sm pd-rec-head"><h2 class="h-sm">Bu ürünle <span class="em" style="color:#087238">ne yapılır?</span></h2></div>
+    <div data-m="g3" class="grid3">
+      {shownRec.map((r) => <RecipeTile r={r} ratio="4/3" size="md" />)}
+    </div>
+  </section>
+
+  <section class="wrap others-sec">
+    <h2>Diğer çeşitler</h2>
+    <div data-m="g4" class="others">
+      {others.map((o) => (
+        <a href={`/urunler/${o.id}`} class="oc">
+          <div class="oc-media" style={`background:${o.tint}`}><Pack k={o.pack} alt={`${o.name} ambalajı`} widths={[280]} sizes="200px" /></div>
+          <b>{o.name}</b>
+          <span data-shop>{fmt(o.price)}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

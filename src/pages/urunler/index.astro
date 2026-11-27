@@ -1,0 +1,10 @@
+---
+import ProductsPage from '../../components/ProductsPage.astro';
+import { SHOP_ENABLED } from '../../lib/site';
+---
+<ProductsPage
+  family="lavas"
+  path="/urunler"
+  title={SHOP_ENABLED ? 'Lavaş ve Tortilla Çeşitleri – Online Sipariş | KIVRIM' : 'Lavaş ve Tortilla Çeşitleri | KIVRIM'}
+  description={SHOP_ENABLED ? 'Klasik, tam buğday ve protein lavaş ile tortilla çeşitlerini online sipariş edin.' : 'Klasik, tam buğday ve protein lavaş ile tortilla çeşitleri: içerik, kullanım önerileri ve toptan satış bilgisi.'}
+/>

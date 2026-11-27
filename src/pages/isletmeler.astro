@@ -1,0 +1,96 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import { EMAIL, CATALOG_URL } from '../lib/site';
+const partners = [
+  { i: 'storefront', t: 'Marketler', d: 'Yerel ve zincir marketler için raf ürünü planlaması.' },
+  { i: 'restaurant', t: 'Restoranlar ve zincirler', d: 'Mutfak ihtiyacına göre ölçü ve kullanım görüşmeleri.' },
+  { i: 'local_shipping', t: 'Dağıtım ortakları', d: 'Bölgesel dağıtım için iş birliği.' },
+];
+const steps = [
+  { n: '1', t: 'Tanışma görüşmesi', d: 'İşletmenizi ve ihtiyaçlarınızı dinliyoruz.' },
+  { n: '2', t: 'Ürün ve ölçü belirleme', d: 'Hangi çeşit ve boyutların uygun olduğunu konuşuyoruz.' },
+  { n: '3', t: 'Numune gönderimi', d: 'Seçtiğiniz ürünleri deneyebilmeniz için numune gönderiyoruz.' },
+  { n: '4', t: 'Teklif ve planlama', d: 'Tedarik ve teslimat planını birlikte çıkarıyoruz.' },
+];
+const chips = ['Market', 'Restoran / zincir', 'Dağıtım'];
+const requests = [
+  { i: 'description', t: 'Teknik ürün föyleri', d: 'İçerik, alerjen, raf ömrü ve lojistik bilgileri.', cta: 'Talep et →', talep: 'Teknik ürün föyü' },
+  { i: 'inventory_2', t: 'Numune talebi', d: 'Mutfağınızda denemek için seçtiğiniz çeşitlerden numune.', cta: 'Talep et →', talep: 'Numune talebi' },
+  { i: 'handshake', t: 'Bayilik ve distribütörlük', d: 'Bölgenizde KIVRIM dağıtımı için başvurun.', cta: 'Başvur →', talep: 'Bayilik ve distribütörlük' },
+];
+---
+<Base title="Toptan Lavaş ve Tortilla Tedariki | KIVRIM İşletmeler" description="Restoran, kafe, market ve dağıtım firmaları için toptan lavaş ve tortilla tedariki. Numune, teknik föy ve teklif talebi." path="/isletmeler" ogPhoto="profesyonel-mutfak" breadcrumb={[{ name: 'İşletmeler İçin' }]}>
+  <section class="ihead">
+    <div class="ihead-img"><Photo k="profesyonel-mutfak" alt="" sizes="50vw" loading="eager" /></div>
+    <div class="wrap ihead-in biz">
+      <nav class="crumbs" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a><span>/</span><b aria-current="page">İşletmeler İçin</b></nav>
+      <h1>İşletmeler için</h1>
+      <p>Market, restoran ve dağıtım işletmeleriyle ürünlerimizi erken aşamada tanıştırmak istiyoruz.</p>
+    </div>
+  </section>
+  <section data-m="g3" class="wrap partners">
+    {partners.map((p) => <div><span class="sq-ic"><Icon name={p.i} size={30} /></span><h3>{p.t}</h3><p>{p.d}</p></div>)}
+  </section>
+  <section data-m="g2" class="wrap biz-form-sec" id="talep">
+    <div class="process">
+      <h2>Süreç nasıl işliyor?</h2>
+      {steps.map((s) => <div class="pstep"><span class="pstep-n">{s.n}</span><div><b>{s.t}</b><div>{s.d}</div></div></div>)}
+    </div>
+    <form class="fcard" data-kv-form="Toptan görüşme talebi" novalidate data-biz-form>
+      <div><h3 data-talep-title>Görüşme talebi</h3></div>
+      <input type="hidden" name="talep" data-label="Talep türü" value="Görüşme talebi" data-talep-input />
+      <input type="hidden" name="ilgi" data-label="İşletme türü" value="Market" id="biz-ilgi" />
+      <div class="ichips" data-tabs="biz-ilgi" data-tab-input="#biz-ilgi" role="group" aria-label="İşletme türü">
+        {chips.map((c, i) => <button type="button" class:list={[{ 'is-on': i === 0 }]} data-tab={c} aria-pressed={i === 0 ? 'true' : 'false'}>{c}</button>)}
+      </div>
+      <div data-m="gs" class="fgrid">
+        <label class="field">Firma adı<input name="firma" data-label="Firma adı" required autocomplete="organization" /></label>
+        <label class="field">Yetkili kişi<input name="yetkili" data-label="Yetkili kişi" required autocomplete="name" /></label>
+        <label class="field">Şehir<input name="sehir" data-label="Şehir" autocomplete="address-level1" /></label>
+        <label class="field">E-posta veya telefon<input name="iletisim" data-label="E-posta / telefon" required /></label>
+      </div>
+      <label class="field">Mesajınız<textarea name="mesaj" data-label="Mesaj" rows="3"></textarea></label>
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true" />
+      <label class="consent"><input type="checkbox" name="kvkk" data-label="KVKK onayı" value="Evet" required /><span><a href="/kvkk" target="_blank">KVKK Aydınlatma Metni</a>’ni okudum, onaylıyorum.</span></label>
+      <button type="submit" class="btn-submit">Talep gönder<span class="icon" aria-hidden="true" style="font-size:24px">send</span></button>
+      <p class="form-status" role="status" hidden></p>
+    </form>
+  </section>
+  <section class="buyers">
+    <div class="wrap buyers-in">
+      <div class="buyers-head">
+        <h2>Satın alma ekipleri <span class="em" style="color:#F9DF9D">için.</span></h2>
+        <a href={`mailto:${EMAIL}?subject=Sat%C4%B1n%20alma`}><Icon name="mail" size={22} />{EMAIL}</a>
+      </div>
+      <div data-m="g4" class="buyers-grid">
+        <a href={CATALOG_URL} download="KIVRIM-Urun-Katalogu.png" class="bcell">
+          <Icon name="menu_book" size={34} color="#F47A12" /><b>Ürün kataloğu</b><span>Tüm çeşitler, ebatlar ve paket seçenekleri.</span>
+          <span class="bcell-cta"><Icon name="download" size={20} />İndir</span>
+        </a>
+        {requests.map((r) => (
+          <a href="#talep" class="bcell" data-talep={r.talep} data-no-wipe>
+            <Icon name={r.i} size={34} color="#F47A12" /><b>{r.t}</b><span>{r.d}</span><span class="bcell-cta">{r.cta}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+<script>
+  // Talep türünü (numune, föy, bayilik) URL'den veya kartlardan forma aktar
+  const form = document.querySelector<HTMLFormElement>('[data-biz-form]');
+  const setTalep = (t: string) => {
+    if (!form || !t) return;
+    form.querySelector<HTMLInputElement>('[data-talep-input]')!.value = t;
+    form.querySelector('[data-talep-title]')!.textContent = t;
+  };
+  const qs = new URLSearchParams(location.search);
+  setTalep(qs.get('talep') || '');
+  const urun = qs.get('urun');
+  const msg = form?.querySelector<HTMLTextAreaElement>('textarea[name=mesaj]');
+  if (urun && msg && !msg.value) msg.value = `İlgilendiğim ürün: ${urun}`;
+  document.querySelectorAll<HTMLElement>('[data-talep]').forEach((a) => a.addEventListener('click', () => setTalep(a.dataset.talep!)));
+  form?.addEventListener('kv:sent', () => { setTalep('Görüşme talebi'); form.querySelector<HTMLElement>('[data-tab]')?.click(); });
+</script>

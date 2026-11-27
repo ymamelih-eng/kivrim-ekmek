@@ -1,0 +1,83 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import Social from './Social.astro';
+import { logo } from '../lib/images';
+import { MENU, EMAIL, ADDRESS_LINE, FREE_SHIPPING_MIN } from '../lib/site';
+interface Props { whiteLogo: string }
+const { whiteLogo } = Astro.props;
+const popular = ['Klasik lavaş', 'Tortilla', 'Quesadilla', 'Kahvaltı', 'Wrap', 'Saklama'];
+const popBg = ['#FDEBD9', '#E6F2DA', '#FBF1D3'];
+---
+<!-- Sayfa geçiş perdesi -->
+<div class="kv-wipe" aria-hidden="true" data-wipe>
+  <div class="kv-wipe-a"></div>
+  <div class="kv-wipe-b"><img src={whiteLogo} alt="" width="172" height="64" /></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" role="status" aria-live="polite" data-toast hidden>
+  <Icon name="check_circle" size={22} color="#72BF16" /><span data-toast-msg></span>
+  <button type="button" class="toast-btn" data-toast-cart data-shop>Sepete git</button>
+</div>
+
+<!-- Sepet çekmecesi -->
+<div class="drawer-wrap" data-drawer hidden>
+  <div class="drawer-scrim" data-close-cart></div>
+  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-h">
+    <div class="drawer-head">
+      <h3 id="drawer-h">Sepetim <span>(<span data-cart-count>0</span>)</span></h3>
+      <button type="button" class="drawer-x" aria-label="Kapat" data-close-cart><Icon name="close" size={24} /></button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-empty" data-cart-empty>
+        <span class="drawer-empty-ic"><Icon name="shopping_bag" size={40} /></span>
+        <b>Sepetiniz boş</b>
+        <a href="/urunler" class="drawer-empty-btn">Ürünlere göz at</a>
+      </div>
+      <div class="drawer-items" data-cart-items></div>
+    </div>
+    <div class="drawer-foot">
+      <div class="drawer-sub"><span>Ara toplam</span><span data-cart-subtotal>₺0,00</span></div>
+      <span class="drawer-note">Kargo ödeme adımında hesaplanır. ₺{FREE_SHIPPING_MIN} üzeri kargo ücretsiz.</span>
+      <a href="/odeme" class="drawer-cta" data-checkout-link>Ödemeye geç<Icon name="arrow_forward" size={22} /></a>
+    </div>
+  </aside>
+</div>
+
+<!-- Arama -->
+<div class="search-wrap" data-search hidden>
+  <div class="search-box" role="dialog" aria-modal="true" aria-label="Site içi arama">
+    <div class="search-bar">
+      <Icon name="search" size={30} color="#087238" />
+      <input type="search" placeholder="Ürün, tarif veya rehber ara…" aria-label="Ara" data-search-input autocomplete="off" />
+      <button type="button" class="search-x" aria-label="Kapat" data-close-search><Icon name="close" size={24} /></button>
+    </div>
+    <div class="search-sec" data-search-popular>
+      <span class="search-h">POPÜLER ARAMALAR</span>
+      <div class="search-pop">
+        {popular.map((t, i) => <button type="button" style={`background:${popBg[i % 3]}`} data-q={t}><Icon name="trending_up" size={18} color="#A8401C" />{t}</button>)}
+      </div>
+    </div>
+    <div class="search-sec" data-search-products hidden><span class="search-h">ÜRÜNLER</span><div data-m="g4" class="search-prod" data-list></div></div>
+    <div class="search-sec tight" data-search-recipes hidden><span class="search-h">TARİFLER</span><div data-list></div></div>
+    <div class="search-sec tight" data-search-articles hidden><span class="search-h">REHBER</span><div data-list></div></div>
+    <p class="search-none" data-search-none hidden></p>
+  </div>
+</div>
+
+<!-- Mobil menü -->
+<div class="mmenu" id="kv-menu" data-menu hidden role="dialog" aria-modal="true" aria-label="Menü">
+  <div class="mmenu-top">
+    <Image src={logo('beyaz')} alt="KIVRIM" width={260} format="webp" class="mmenu-logo" />
+    <button type="button" class="mmenu-x" aria-label="Kapat" data-close-menu><Icon name="close" size={28} /></button>
+  </div>
+  <nav class="mmenu-nav">
+    {MENU.map((m) => <a href={m.href}>{m.label}<Icon name="arrow_forward" size={24} color="#F9DF9D" /></a>)}
+  </nav>
+  <div class="mmenu-foot">
+    <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+    <span>{ADDRESS_LINE}</span>
+    <Social variant="menu" />
+  </div>
+</div>

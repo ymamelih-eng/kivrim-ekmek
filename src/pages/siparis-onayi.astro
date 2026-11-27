@@ -1,0 +1,62 @@
+---
+import { SHOP_ENABLED as __SHOP } from '../lib/site';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import RecipeTile from '../components/RecipeTile.astro';
+import { getRecipes } from '../lib/catalog';
+import { DEMO_MODE } from '../lib/site';
+const recipes = (await getRecipes()).slice(0, 3);
+// Mağaza kapalıyken bu sayfa yayınlanmaz; toptan satış sayfasına yönlendirilir.
+if (!__SHOP) return Astro.redirect('/isletmeler');
+---
+<Base title="Siparişiniz Alındı | KIVRIM" description="Siparişiniz başarıyla oluşturuldu." path="/siparis-onayi" noindex>
+  <section class="ok-sec">
+    <div class="ok">
+      <span class="ok-check"><Icon name="check" size={56} /></span>
+      <span class="eyebrow" style="align-self:center">SİPARİŞ ONAYI</span>
+      <h1>Siparişiniz <span class="em" style="color:#087238">alındı.</span></h1>
+      <p>{DEMO_MODE
+        ? 'Teşekkür ederiz! Sipariş detaylarını e-posta adresinize gönderdik. Siparişiniz kargoya verildiğinde takip bilgisini paylaşacağız.'
+        : 'Teşekkür ederiz! Sipariş talebiniz bize ulaştı. Ödeme ve teslimat detaylarını netleştirmek için kısa süre içinde sizinle iletişime geçeceğiz.'}</p>
+      <div class="ok-card" data-ok-card hidden>
+        <div data-m="g4" class="ok-meta">
+          <div><span>SİPARİŞ NO</span><b data-ok-no></b></div>
+          <div><span>TARİH</span><b data-ok-date></b></div>
+          <div><span>{DEMO_MODE ? 'TAHMİNİ TESLİMAT' : 'DURUM'}</span><b data-ok-eta></b></div>
+        </div>
+        <div class="ok-items">
+          <div data-ok-items></div>
+          <div class="ok-total"><span>Toplam</span><span data-ok-total></span></div>
+        </div>
+      </div>
+      <div class="ok-btns">
+        <a href="/hesabim#siparislerim" class="btn btn-ink"><Icon name="local_shipping" size={22} />Siparişimi takip et</a>
+        <a href="/urunler" class="btn btn-outline">Alışverişe devam et</a>
+      </div>
+      <div data-m="g4" class="ok-recs">{recipes.map((r) => <RecipeTile r={r} ratio="4/3" size="sm" />)}</div>
+      <span class="ok-recs-note">Siparişinizle birlikte deneyebileceğiniz tarifler</span>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { DATA, fmt, store } from '../scripts/app';
+  type O = { no: string; date: string; total: string; status: string; items: { id: string; qty: number; line: string }[] };
+  const o = store.get<O | null>('kv-last-order', null);
+  if (o) {
+    const $ = (s: string) => document.querySelector<HTMLElement>(s)!;
+    $('[data-ok-card]').hidden = false;
+    $('[data-ok-no]').textContent = o.no;
+    $('[data-ok-date]').textContent = o.date;
+    const eta = new Date(); eta.setDate(eta.getDate() + 2);
+    const eta2 = new Date(); eta2.setDate(eta2.getDate() + 3);
+    const m = (d: Date) => d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+    $('[data-ok-eta]').textContent = DATA.demo ? `${m(eta)} – ${m(eta2)}` : o.status;
+    $('[data-ok-total]').textContent = o.total;
+    $('[data-ok-items]').innerHTML = o.items.map((it) => {
+      const p = DATA.products.find((x) => x.id === it.id);
+      if (!p) return '';
+      return `<div class="ok-item"><div class="co-thumb" style="background:${p.tint}"><img src="${p.img}" alt=""></div><div><b>${p.name}</b><div>${it.qty} adet</div></div><b>${it.line || fmt(p.price * it.qty)}</b></div>`;
+    }).join('');
+  }
+</script>

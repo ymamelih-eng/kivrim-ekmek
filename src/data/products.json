@@ -1,0 +1,8 @@
+[
+  { "id": "klasik-lavas", "family": "lavas", "variant": "Klasik", "name": "Klasik Lavaş", "price": 49.9, "tint": "#F4F1E6", "pack": "lavas-klasik", "cut": "kesit-lavas", "description": "Günlük sofraların ince ve esnek lavaşı." },
+  { "id": "tam-bugday-lavas", "family": "lavas", "variant": "Tam Buğday", "name": "Tam Buğday Lavaş", "price": 59.9, "tint": "#F3E7DA", "pack": "lavas-tam-bugday", "cut": "kesit-lavas", "description": "Tam buğday unuyla hazırlanan, daha tok bir alternatif." },
+  { "id": "protein-lavas", "family": "lavas", "variant": "Protein", "name": "Protein Lavaş", "price": 79.9, "tint": "#FDEBD9", "pack": "lavas-protein", "cut": "kesit-lavas", "description": "Aktif yaşama uygun, pratik ve dengeli." },
+  { "id": "klasik-tortilla", "family": "tortilla", "variant": "Klasik", "name": "Klasik Tortilla", "price": 54.9, "tint": "#F4F1E6", "pack": "tortilla-klasik", "cut": "kesit-tortilla", "description": "Wrap ve quesadilla için yumuşak tortilla." },
+  { "id": "tam-bugday-tortilla", "family": "tortilla", "variant": "Tam Buğday", "name": "Tam Buğday Tortilla", "price": 62.9, "tint": "#F3E7DA", "pack": "tortilla-tam-bugday", "cut": "kesit-tortilla", "description": "Tam buğday unuyla daha tok bir seçenek." },
+  { "id": "protein-tortilla", "family": "tortilla", "variant": "Protein", "name": "Protein Tortilla", "price": 84.9, "tint": "#FDEBD9", "pack": "tortilla-protein", "cut": "kesit-tortilla", "description": "Aktif yaşama uygun, pratik ve dengeli." }
+]

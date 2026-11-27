@@ -1,0 +1,246 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Pack from '../components/Pack.astro';
+import Photo from '../components/Photo.astro';
+import ProductCard from '../components/ProductCard.astro';
+import RecipeTile from '../components/RecipeTile.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { getImage } from 'astro:assets';
+import { photo } from '../lib/images';
+import { getArticles, getProducts, getRecipes } from '../lib/catalog';
+import { SITE_URL, SHOP_ENABLED, CATALOG_URL, EMAIL } from '../lib/site';
+import faqData from '../data/faq.json';
+
+const products = await getProducts();
+const recipes = await getRecipes();
+const articles = await getArticles();
+const faq = faqData.home.filter((q) => SHOP_ENABLED || !q.shopOnly);
+const tabThumb = async (k: string) => (await getImage({ src: photo(k), width: 104, height: 104, fit: 'cover', format: 'webp' })).src;
+const tabs = [
+  { label: 'Lavaş', sub: 'Klasik · Tam Buğday · Protein', img: await tabThumb('hamur-acma') },
+  { label: 'Tortilla', sub: 'Klasik · Tam Buğday · Protein', img: await tabThumb('tavuklu-wrap') },
+  { label: 'Tarifler', sub: 'Her öğüne pratik fikirler', img: await tabThumb('kahvalti-sofrasi') },
+];
+const marquee = products.map((p) => p.name);
+const trust = [
+  { i: 'verified', t: 'Kalite kontrollü', d: 'Her partide düzenli kontrol', bg: '#E6F2DA', c: '#087238' },
+  SHOP_ENABLED
+    ? { i: 'local_shipping', t: 'Hızlı teslimat', d: 'Türkiye geneline kargo', bg: '#FDEBD9', c: '#C75F08' }
+    : { i: 'storefront', t: 'Toptan tedarik', d: 'Market, restoran ve bayiler için', bg: '#FDEBD9', c: '#C75F08' },
+  { i: 'eco', t: 'Taze ambalaj', d: 'Tazeliği koruyan paketleme', bg: '#FBF1D3', c: '#8A6410' },
+  { i: 'support_agent', t: 'Bize ulaşın', d: EMAIL, bg: '#F3E7DA', c: '#A8401C' },
+];
+const day = recipes[0];
+
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'KIVRIM', url: SITE_URL + '/', inLanguage: 'tr-TR', publisher: { '@id': SITE_URL + '/#org' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.a } })) },
+  { '@context': 'https://schema.org', '@type': 'ItemList', name: 'KIVRIM Lavaş ve Tortilla Ürünleri',
+    itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: `${SITE_URL}/urunler/${p.id}` })) },
+];
+---
+<Base
+  title="KIVRIM | Lavaş ve Tortilla – Taze Unlu Mamuller"
+  description="KIVRIM; klasik, tam buğday ve protein lavaş ile tortilla çeşitleri sunan yeni nesil unlu mamuller markası. Online sipariş, tarifler ve toptan satış."
+  path="/"
+  jsonLd={jsonLd}
+>
+  <noscript><style is:inline>.hero-slide:first-of-type{clip-path:none!important;z-index:3}.hero-slide:first-of-type .hs-line>span,.hero-slide:first-of-type .hs-fade,.hero-slide:first-of-type .hs-card{transform:none!important;opacity:1!important}.hero-slide:first-of-type .hs-bar{width:72px!important}</style></noscript>
+
+  <!-- ===== Hero slider ===== -->
+  <section class="hero-pad" aria-roledescription="carousel" aria-label="Öne çıkanlar">
+    <div class="hero" data-m="hero" data-slider data-cur="0" tabindex="-1">
+      <!-- 1 — Lavaş -->
+      <div class="hero-slide hs-0" data-slide aria-roledescription="slide" aria-label="1 / 3: Lavaş">
+        <Photo k="hamur-acma" alt="Taze lavaş hamuru açılırken" class="hs-zoom hs-cover" loading="eager" fetchpriority="high" sizes="100vw" />
+        <div class="hs0-shade"></div>
+        <div data-m="hpack" class="hs0-pack"><div class="hs-card"><Pack k="lavas-klasik" alt="Klasik Lavaş ambalajı" width={250} widths={[250, 500]} sizes="250px" class="hs-pack" loading="eager" /></div></div>
+        <div data-m="htxt" class="hs-txt hs0-txt">
+          <span class="hs-bar"></span>
+          <h1 class="hs-h hs-light">
+            <span class="hs-line"><span style="--d:.40s">İncecik.</span></span>
+            <span class="hs-line"><span style="--d:.52s">Esnek.</span></span>
+            <span class="hs-line"><span style="--d:.64s" class="em" data-c="cream">Sofralık.</span></span>
+          </h1>
+          <p class="hs-p hs-fade" style="--d:.8s">Kahvaltıdan dürüme, her sofraya uyum sağlayan lavaş çeşitleri.</p>
+          <div class="hs-ctas">
+            <a href="/urunler/lavas" class="hs-btn hs-btn-cream hs-fade" style="--d:.9s">Lavaşları keşfet<Icon name="arrow_forward" size={24} /></a>
+            <a href="/urunler/klasik-lavas" class="hs-link hs-fade" style="--d:1s">Klasik Lavaş’ı incele</a>
+          </div>
+        </div>
+      </div>
+      <!-- 2 — Tortilla -->
+      <div class="hero-slide hs-1" data-slide aria-roledescription="slide" aria-label="2 / 3: Tortilla">
+        <div data-m="hphoto" class="hs1-photo"><Photo k="tavuklu-wrap" alt="Tortilla ile hazırlanmış tavuklu wrap" class="hs-zoom hs-cover" sizes="(max-width:900px) 100vw, 54vw" /></div>
+        <div data-m="hpack" class="hs1-pack"><div class="hs-card"><Pack k="tortilla-klasik" alt="Klasik Tortilla ambalajı" width={236} widths={[236, 472]} sizes="236px" class="hs-pack" /></div></div>
+        <div data-m="htxt" class="hs-txt hs1-txt">
+          <span class="hs-bar"></span>
+          <h2 class="hs-h hs-dark">
+            <span class="hs-line"><span style="--d:.40s">Sar.</span></span>
+            <span class="hs-line"><span style="--d:.52s">Katla.</span></span>
+            <span class="hs-line"><span style="--d:.64s" class="em" data-c="brick">Paylaş.</span></span>
+          </h2>
+          <p class="hs-p hs-fade hs1-p" style="--d:.8s">Wrap, quesadilla ve pratik tabaklar için yumuşak dokulu tortillalar.</p>
+          <div class="hs-ctas">
+            <a href="/urunler/tortilla" class="hs-btn hs-btn-ink hs-fade" style="--d:.9s">Tortillaları keşfet<Icon name="arrow_forward" size={24} /></a>
+            <a href="/urunler/klasik-tortilla" class="hs-link hs-link-dark hs-fade" style="--d:1s">Klasik Tortilla’yı incele</a>
+          </div>
+        </div>
+      </div>
+      <!-- 3 — Tarifler -->
+      <div class="hero-slide hs-2" data-slide aria-roledescription="slide" aria-label="3 / 3: Tarifler">
+        <Photo k="kahvalti-sofrasi" alt="Lavaşlı kahvaltı sofrası" class="hs-zoom hs-cover" sizes="100vw" />
+        <div class="hs2-shade"></div>
+        <div data-m="htxt" class="hs-txt hs2-txt">
+          <span class="hs-bar"></span>
+          <h2 class="hs-h hs-light">
+            <span class="hs-line"><span style="--d:.40s">Her öğüne</span></span>
+            <span class="hs-line"><span style="--d:.52s" class="em" data-c="cream">yeni bir fikir.</span></span>
+          </h2>
+          <div class="hs-ctas hs2-ctas">
+            <a href="/tarifler" class="hs-btn hs-btn-cream hs-fade" style="--d:.85s">Tariflere göz at<Icon name="arrow_forward" size={24} /></a>
+            <a href={`/tarifler/${day.id}`} class="hs-day hs-fade" style="--d:.95s"><span class="hs-day-k">GÜNÜN TARİFİ</span><span class="hs-day-t">{day.title} · {day.minutes} dk</span></a>
+          </div>
+        </div>
+      </div>
+
+      <div data-m="hcount" class="hero-count" aria-hidden="true"><span class="hero-no" data-slide-no>01</span><span class="hero-rule"></span>03</div>
+
+      <div data-m="band" class="hero-band">
+        <div class="hb-tabs" role="tablist" aria-label="Slaytlar">
+          {tabs.map((t, i) => (
+            <button type="button" class="hb-tab" role="tab" data-slide-to={i} aria-selected={i === 0 ? 'true' : 'false'}>
+              <img data-m="tthumb" src={t.img} alt="" width="52" height="52" />
+              <span class="hb-tx">
+                <span class="hb-top"><span class="hb-n">0{i + 1}</span><span class="hb-l">{t.label}</span><span data-m="tsub" class="hb-sub">{t.sub}</span></span>
+                <span class="hb-track" data-prog></span>
+              </span>
+            </button>
+          ))}
+        </div>
+        <div data-m="harr" class="hb-arrows">
+          <button type="button" class="hb-arr" aria-label="Önceki" data-slide-prev><Icon name="arrow_back" size={26} /></button>
+          <button type="button" class="hb-arr" aria-label="Sonraki" data-slide-next><Icon name="arrow_forward" size={26} /></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Kayan ürün bandı ===== -->
+  <div class="marq" aria-hidden="true">
+    <div class="marq-in">
+      {[...marquee, ...marquee].map((t, i) => <span class="marq-it"><span>{t}</span><span class="marq-dot" style={`background:${i % 2 ? '#72BF16' : '#F47A12'}`}></span></span>)}
+    </div>
+  </div>
+  <ul class="sr-only">{marquee.map((t) => <li>{t}</li>)}</ul>
+
+  <!-- ===== Güven kutuları ===== -->
+  <section data-m="g4" class="wrap trust">
+    {trust.map((t) => (
+      <div class="trust-it">
+        <span class="trust-ic" style={`background:${t.bg};color:${t.c}`}><Icon name={t.i} size={30} /></span>
+        <div><b>{t.t}</b><div class="trust-d">{t.d}</div></div>
+      </div>
+    ))}
+  </section>
+
+  <!-- ===== Ürünlerimiz ===== -->
+  <section class="wrap home-products" aria-labelledby="h-urunler">
+    <div class="sec-head">
+      <div class="sec-head-l">
+        <span class="kicker"><Icon name="bakery_dining" size={22} />ÜRÜNLERİMİZ</span>
+        <h2 id="h-urunler" class="h-xl">Lavaş ve tortilla,<br /><span class="em-xl">her sofraya göre.</span></h2>
+      </div>
+      <div class="seg" data-tabs="home-range">
+        <button type="button" class="is-on" data-tab="lavas" aria-pressed="true">Lavaş</button>
+        <button type="button" data-tab="tortilla" aria-pressed="false">Tortilla</button>
+      </div>
+    </div>
+    {(['lavas', 'tortilla'] as const).map((fam) => (
+      <div data-m="g3" class="grid3" data-tab-panel="home-range" data-tab-key={fam} hidden={fam !== 'lavas'}>
+        {products.filter((p) => p.family === fam).map((p) => <ProductCard p={p} />)}
+      </div>
+    ))}
+  </section>
+
+  <!-- ===== Protein serisi ===== -->
+  <section class="wrap prot-sec">
+    <div data-m="g2" class="prot">
+      <div class="prot-media">
+        <Photo k="sebzeli-quesadilla" alt="Protein lavaş ile hazırlanmış öğün" class="zoom-img" sizes="(max-width:900px) 100vw, 58vw" />
+        <div class="prot-pack"><Pack k="lavas-protein" alt="Protein Lavaş ambalajı" width={220} widths={[220, 440]} sizes="220px" /></div>
+      </div>
+      <div class="prot-copy">
+        <span class="eyebrow on-dark">PROTEİN SERİSİ</span>
+        <h2>Aynı esneklik,<br /><span class="em" style="color:#F9DF9D">daha dolu bir öğün.</span></h2>
+        <p>Protein Lavaş ve Protein Tortilla; antrenman sonrası öğünler, pratik öğle yemekleri ve dengeli bir beslenme düzeni için geliştirildi. Besin değerleri ürün sayfalarında yer alır.</p>
+        <div class="prot-links">
+          <a href="/urunler/protein-lavas">Protein Lavaş<Icon name="arrow_forward" size={24} color="#F9DF9D" /></a>
+          <a href="/urunler/protein-tortilla">Protein Tortilla<Icon name="arrow_forward" size={24} color="#F9DF9D" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap home-rest">
+    <!-- Bugün ne pişirsek? -->
+    <div class="sec-head sec-head-sm">
+      <h2 class="h-lg">Bugün ne <span class="em-lg">pişirsek?</span></h2>
+      <a href="/tarifler" class="link-arrow">Tüm tarifler<Icon name="arrow_forward" size={22} /></a>
+    </div>
+    <div data-m="g3" class="grid3">
+      {recipes.slice(0, 3).map((r) => <RecipeTile r={r} />)}
+    </div>
+
+    <!-- İşletmeler için -->
+    <div data-m="g2" class="biz-teaser">
+      <div class="biz-img"><Photo k="peynirli-durum" alt="Restoran mutfağında dürüm hazırlığı" class="zoom-img" sizes="(max-width:900px) 100vw, 40vw" /></div>
+      <div class="biz-copy">
+        <span class="eyebrow">İŞLETMELER İÇİN</span>
+        <h2 class="h-lg2">Mutfağınız için<br /><span class="em" style="color:#A8401C">düzenli tedarik.</span></h2>
+        <p>Zincir ve bağımsız marketler, restoranlar, döner zincirleri ve distribütörler için toptan lavaş ve tortilla tedariki. Numune, ürün kataloğu ve teknik föy talepleriniz için satın alma ekibimizle doğrudan görüşün.</p>
+        <div data-m="g3" class="biz-segs">
+          <div><Icon name="storefront" size={30} color="#A8401C" /><b>Market ve zincirler</b></div>
+          <div><Icon name="restaurant" size={30} color="#A8401C" /><b>Restoran ve döner zincirleri</b></div>
+          <div><Icon name="local_shipping" size={30} color="#A8401C" /><b>Bayilik ve distribütörlük</b></div>
+        </div>
+        <div class="biz-ctas">
+          <a href="/isletmeler#talep" class="btn btn-ink biz-btn">Toptan teklif al<Icon name="arrow_forward" size={22} /></a>
+          <a href={CATALOG_URL} download="KIVRIM-Urun-Katalogu.png" class="btn btn-outline biz-btn2"><Icon name="download" size={22} />Ürün kataloğu</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lavaş rehberi -->
+    <div class="sec-head sec-head-sm guide-head">
+      <h2 class="h-md">Lavaş <span class="em" style="color:#087238">rehberi</span></h2>
+      <a href="/rehber" class="link-arrow">Tüm yazılar<Icon name="arrow_forward" size={22} /></a>
+    </div>
+    <div data-m="g3" class="grid3">
+      {articles.slice(0, 3).map((a) => <ArticleCard a={a} />)}
+    </div>
+
+    <!-- SEO metin bloğu + SSS özeti -->
+    <div data-m="g2" class="seo-blk">
+      <div class="seo-copy">
+        <span class="eyebrow">UNLU MAMULLER</span>
+        <h2>Taze lavaş ve tortilla, sofranıza kadar.</h2>
+        <p>KIVRIM; klasik lavaş, tam buğday lavaş ve protein lavaşın yanında klasik, tam buğday ve protein tortilla çeşitleri sunan yeni nesil bir unlu mamuller markasıdır. {SHOP_ENABLED ? 'Ürünlerimizi online mağazamızdan sipariş edebilir, kahvaltıdan akşam yemeğine pratik tariflerle sofranıza taşıyabilirsiniz.' : 'Kahvaltıdan akşam yemeğine pratik tariflerle ürünlerimizi sofranıza taşıyabilirsiniz.'}</p>
+        <p>Restoran, kafe ve marketler için toptan lavaş ve tortilla tedariki konusunda da işletmelerle çalışıyoruz.</p>
+      </div>
+      <div class="acc">
+        {faq.map((q) => (
+          <details><summary>{q.q}<Icon name="add_circle" size={26} /></summary><p>{q.a}</p></details>
+        ))}
+        <a href="/sss" class="link-arrow faq-more">Tüm soruları gör<Icon name="arrow_forward" size={22} /></a>
+      </div>
+    </div>
+
+    <div class="biz-strip">
+      <span class="biz-strip-ic"><Icon name="storefront" size={31} /></span>
+      <div class="biz-strip-tx"><b>İşletmeler için</b><div>Market, restoran ve kafeler için toptan ürün görüşmeleri.</div></div>
+      <a href="/isletmeler" class="biz-strip-btn">Detaylar<Icon name="north_east" size={22} /></a>
+    </div>
+  </section>
+</Base>

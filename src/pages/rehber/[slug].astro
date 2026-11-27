@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Pack from '../../components/Pack.astro';
+import Photo from '../../components/Photo.astro';
+import { getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import { photo } from '../../lib/images';
+import { formatDateTR, getArticles, getProduct, type Article } from '../../lib/catalog';
+import { SITE_URL, fmt, upperTR } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return (await getArticles()).map((a) => ({ params: { slug: a.id }, props: { a } }));
+}
+const { a } = Astro.props as { a: Article };
+const { Content } = await render(a);
+const d = a.data;
+const prod = await getProduct(d.product);
+const others = (await getArticles()).filter((x) => x.id !== a.id).slice(0, 3);
+const thumb = async (k: string) => (await getImage({ src: photo(k), width: 128, height: 128, fit: 'cover', format: 'webp' })).src;
+const otherThumbs = await Promise.all(others.map((o) => thumb(o.data.image)));
+const img = await getImage({ src: photo(d.image), width: 1200, format: 'jpg' });
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'Article', headline: d.title, description: d.description,
+  image: [new URL(img.src, SITE_URL).href], datePublished: d.date.toISOString().slice(0, 10), inLanguage: 'tr-TR',
+  mainEntityOfPage: `${SITE_URL}/rehber/${a.id}`,
+  author: { '@type': 'Organization', name: 'KIVRIM' }, publisher: { '@id': SITE_URL + '/#org' },
+}];
+---
+<Base title={`${d.title} | KIVRIM Rehber`} description={d.description} path={`/rehber/${a.id}`} ogType="article" ogPhoto={d.image} jsonLd={jsonLd}
+  breadcrumb={[{ name: 'Rehber', href: '/rehber' }, { name: d.title }]}>
+  <section style={`background:${d.bg}`}>
+    <div class="art-head">
+      <nav class="crumbs" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a><span>/</span><a href="/rehber">Rehber</a><span>/</span><b aria-current="page">{d.title}</b></nav>
+      <span class="eyebrow">{upperTR(d.category)}</span>
+      <h1>{d.title}</h1>
+      <div class="art-meta">
+        <span><Icon name="schedule" size={20} color="#A8401C" />{d.readMinutes} dk okuma</span>
+        <span><Icon name="calendar_month" size={20} color="#A8401C" /><time datetime={d.date.toISOString().slice(0, 10)}>{formatDateTR(d.date)}</time></span>
+      </div>
+      <div class="art-cover"><Photo k={d.image} alt={d.title} loading="eager" fetchpriority="high" sizes="(max-width:1100px) 100vw, 1000px" /></div>
+    </div>
+  </section>
+  <section data-m="g2" class="art-layout">
+    <article class="art-body">
+      <p class="art-lead">{d.description}</p>
+      <div class="art-md"><Content /></div>
+    </article>
+    <aside data-m="sticky" class="art-side">
+      <div class="art-prod" style={`background:${prod.tint}`}>
+        <span class="art-prod-k">YAZIDAKİ ÜRÜN</span>
+        <Pack k={prod.pack} alt={`${prod.name} ambalajı`} class="art-prod-img" widths={[280]} sizes="160px" />
+        <b>{prod.name}</b>
+        <span data-shop>{fmt(prod.price)}</span>
+        <div class="art-prod-btns">
+          <button data-shop type="button" class="sm-ink" data-cart-add={prod.id} data-n="1" data-open-after><Icon name="add_shopping_cart" size={18} />Sepete ekle</button>
+          <a href={`/urunler/${prod.id}`} class="sm-o">İncele</a>
+        </div>
+      </div>
+      <div class="art-others">
+        <span>DİĞER YAZILAR</span>
+        {others.map((o, i) => <a href={`/rehber/${o.id}`}><img src={otherThumbs[i]} alt="" width="64" height="64" loading="lazy" /><b>{o.data.title}</b></a>)}
+      </div>
+    </aside>
+  </section>
+</Base>

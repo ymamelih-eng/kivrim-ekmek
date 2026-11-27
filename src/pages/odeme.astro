@@ -1,0 +1,119 @@
+---
+import { SHOP_ENABLED as __SHOP } from '../lib/site';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { DEMO_MODE, SHOP_ENABLED, EMAIL } from '../lib/site';
+// Mağaza kapalıyken bu sayfa yayınlanmaz; toptan satış sayfasına yönlendirilir.
+if (!__SHOP) return Astro.redirect('/isletmeler');
+---
+<Base title="Ödeme | KIVRIM" description="Siparişinizi tamamlayın." path="/odeme" noindex newsletter={false}>
+  {SHOP_ENABLED ? (
+    <section class="co">
+      <div class="co-head">
+        <h1>Ödeme</h1>
+        <div class="co-steps" aria-label="Adımlar">
+          <span style="color:#087238"><Icon name="check_circle" size={22} />Sepet</span><span class="co-rule"></span>
+          <span style="color:#0B3D1F"><span class="co-n" style="background:#0B3D1F;color:#fff">2</span>Teslimat ve ödeme</span><span class="co-rule"></span>
+          <span><span class="co-n" style="border:1px solid #D9D2C5">3</span>Onay</span>
+        </div>
+      </div>
+      <div data-m="g2" class="co-grid">
+        <form class="co-form" id="co-form" novalidate data-checkout>
+          <h2><Icon name="home_pin" size={28} color="#087238" />Teslimat bilgileri</h2>
+          <div data-m="gs" class="fgrid">
+            <label class="field">Ad soyad<input name="ad" data-label="Ad soyad" required autocomplete="name" /></label>
+            <label class="field">Telefon<input type="tel" name="tel" data-label="Telefon" required autocomplete="tel" /></label>
+            <label class="field full">E-posta<input type="email" name="email" data-label="E-posta" required autocomplete="email" /></label>
+            <label class="field">İl<input name="il" data-label="İl" required autocomplete="address-level1" /></label>
+            <label class="field">İlçe<input name="ilce" data-label="İlçe" required autocomplete="address-level2" /></label>
+            <label class="field full">Açık adres<input name="adres" data-label="Açık adres" required autocomplete="street-address" /></label>
+          </div>
+          <h2 style="margin-top:8px"><Icon name="credit_card" size={28} color="#087238" />Ödeme bilgileri</h2>
+          {DEMO_MODE ? (
+            <div data-m="gs" class="fgrid">
+              {/* Demo: name özniteliği yok — kart verisi hiçbir yere gönderilmez */}
+              <label class="field full">Kart üzerindeki isim<input autocomplete="off" /></label>
+              <label class="field full">Kart numarası<input inputmode="numeric" autocomplete="off" /></label>
+              <label class="field">Son kullanma (AA/YY)<input autocomplete="off" /></label>
+              <label class="field">CVC<input inputmode="numeric" autocomplete="off" /></label>
+            </div>
+          ) : (
+            <p class="notice"><Icon name="info" size={22} color="#C75F08" /><span>Kart ile ödeme altyapısı entegre edilene kadar siparişiniz bir <b>sipariş talebi</b> olarak alınır. Ödeme ve teslimat detayları için sizinle e-posta veya telefonla iletişime geçeriz. Kart bilgisi istemiyoruz.</span></p>
+          )}
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true" />
+          <label class="consent"><input type="checkbox" name="sozlesme" data-label="Sözleşme onayı" value="Evet" required /><span><a href="/mesafeli-satis-sozlesmesi" target="_blank">Mesafeli Satış Sözleşmesi</a>’ni ve Ön Bilgilendirme Formu’nu okudum, onaylıyorum.</span></label>
+          <p class="form-status" role="status" hidden></p>
+        </form>
+        <aside data-m="sticky" class="co-sum">
+          <h3>Sipariş özeti</h3>
+          <p data-co-empty style="margin:0;font-size:15px;color:#3D5446">Sepetiniz boş. <a href="/urunler">Ürünlere göz atın.</a></p>
+          <div data-co-items style="display:flex;flex-direction:column;gap:12px"></div>
+          <div class="co-tot">
+            <div><span>Ara toplam</span><span data-co-sub>₺0,00</span></div>
+            <div><span>Kargo</span><span data-co-ship>₺0,00</span></div>
+            <div class="grand"><span>Toplam</span><span data-co-total>₺0,00</span></div>
+          </div>
+          <button type="submit" form="co-form" class="btn btn-ink btn-gap co-cta"><Icon name="lock" size={22} />{DEMO_MODE ? 'Siparişi tamamla' : 'Sipariş talebini gönder'}</button>
+          <span class="co-safe"><Icon name="verified_user" size={18} color="#087238" />{DEMO_MODE ? 'Demo modu · ödeme alınmaz' : 'Bilgileriniz yalnızca siparişiniz için kullanılır'}</span>
+        </aside>
+      </div>
+    </section>
+  ) : (
+    <section class="wrap nf">
+      <span class="eyebrow">ONLINE MAĞAZA</span>
+      <h1>Çok <span class="em" style="color:#087238">yakında.</span></h1>
+      <p>Online satış henüz açılmadı. Toptan alım ve satış noktası bilgisi için bizimle iletişime geçebilirsiniz.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="/isletmeler#talep" class="btn btn-ink" style="padding:16px 24px">Toptan bilgi al<Icon name="arrow_forward" size={22} /></a>
+        <a href={`mailto:${EMAIL}`} class="btn btn-outline" style="padding:15px 22px">{EMAIL}</a>
+      </div>
+    </section>
+  )}
+</Base>
+
+<script>
+  import { cart, fmt, store, DATA } from '../scripts/app';
+  import { sendForm, collect } from '../scripts/forms';
+
+  const form = document.querySelector<HTMLFormElement>('[data-checkout]');
+  const render = () => {
+    const items = cart.items(); const t = cart.totals();
+    const box = document.querySelector('[data-co-items]'); if (!box) return;
+    box.innerHTML = items.map(({ p, qty }) => `<div class="co-item"><div class="co-thumb" style="background:${p.tint}"><img src="${p.img}" alt=""></div><div><b>${p.name}</b><div>${qty} adet</div></div><b>${fmt(p.price * qty)}</b></div>`).join('');
+    document.querySelector<HTMLElement>('[data-co-empty]')!.hidden = items.length > 0;
+    document.querySelector('[data-co-sub]')!.textContent = fmt(t.sub);
+    document.querySelector('[data-co-ship]')!.textContent = t.ship === 0 && t.sub > 0 ? 'Ücretsiz' : fmt(t.ship);
+    document.querySelector('[data-co-total]')!.textContent = fmt(t.total);
+  };
+  document.addEventListener('kv:cart', render);
+  render();
+
+  const MONTHS = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const st = form.querySelector<HTMLElement>('.form-status')!;
+    const say = (s: 'error' | 'info', m: string) => { st.hidden = false; st.dataset.state = s; st.textContent = m; };
+    const items = cart.items(); const t = cart.totals();
+    if (!items.length) return say('error', 'Sepetiniz boş.');
+    if (!form.checkValidity()) { form.querySelector<HTMLInputElement>(':invalid')?.focus(); return say('error', 'Lütfen teslimat bilgilerini eksiksiz doldurun ve sözleşmeyi onaylayın.'); }
+    const d = new Date();
+    const no = `KV-${String(d.getFullYear()).slice(2)}${String(d.getMonth() + 1).padStart(2, '0')}-${String(Math.floor(1000 + Math.random() * 9000))}`;
+    const fields = collect(form);
+    const lines = items.map(({ p, qty }) => `${p.name} × ${qty} = ${fmt(p.price * qty)}`).join('\n');
+    if (!DATA.demo) {
+      const btn = document.querySelector<HTMLButtonElement>('.co-cta')!; btn.disabled = true;
+      const res = await sendForm('Sipariş talebi ' + no, { 'Sipariş no': no, ...fields, 'Ürünler': lines, 'Ara toplam': fmt(t.sub), 'Kargo': fmt(t.ship), 'Toplam': fmt(t.total) });
+      btn.disabled = false;
+      if (!res.ok) return say('error', 'Sipariş talebi gönderilemedi (' + (res.error || 'bağlantı hatası') + '). Lütfen tekrar deneyin.');
+    }
+    const order = {
+      no, date: `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`, total: fmt(t.total), count: t.count,
+      desc: items.map((x) => x.p.name).slice(0, 2).join(', '), status: DATA.demo ? 'Hazırlanıyor' : 'Talep alındı',
+      items: items.map(({ p, qty }) => ({ id: p.id, qty, line: fmt(p.price * qty) })),
+    };
+    store.set('kv-last-order', order);
+    store.set('kv-orders', [order, ...store.get<unknown[]>('kv-orders', [])].slice(0, 20));
+    cart.clear();
+    location.href = '/siparis-onayi';
+  });
+</script>
