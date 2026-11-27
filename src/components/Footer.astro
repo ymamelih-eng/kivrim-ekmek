@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import Social from './Social.astro';
+import { logo } from '../lib/images';
+import { NAV, EMAIL, ADDRESS, HOURS } from '../lib/site';
+---
+<footer class="site-footer">
+  <div class="ft-blob" aria-hidden="true"></div>
+  <div class="wrap ft-in">
+    <div data-m="gf" class="ft-grid">
+      <div class="ft-brand">
+        <Image src={logo('beyaz')} alt="KIVRIM" width={560} widths={[280, 560]} sizes="280px" class="ft-logo" format="webp" />
+        <p class="ft-tag">Lavaş ve tortillada sofranın yeni kıvrımı.</p>
+        <Social variant="footer" />
+      </div>
+      <div class="ft-col">
+        <span class="ft-h">ÜRÜNLER</span>
+        <a href="/urunler/lavas">Lavaş</a>
+        <a href="/urunler/tortilla">Tortilla</a>
+        <a href="/tarifler">Tarifler</a>
+        <button type="button" class="btn-reset" data-shop data-open-cart>Sepetim</button>
+      </div>
+      <div class="ft-col">
+        <span class="ft-h">KURUMSAL</span>
+        {NAV.map((n) => <a href={n.href}>{n.label}</a>)}
+      </div>
+      <div class="ft-col">
+        <span class="ft-h">YARDIM</span>
+        <a href="/sss">Sıkça Sorulan Sorular</a>
+        <a href="/rehber">Lavaş Rehberi</a>
+        <a href="/hesabim">Hesabım</a>
+        <a href="/hesabim#siparislerim">Sipariş takibi</a>
+      </div>
+      <div class="ft-col ft-contact">
+        <span class="ft-h">İLETİŞİM</span>
+        <a href={`mailto:${EMAIL}`} class="ft-mail"><Icon name="mail" size={24} color="#F9DF9D" />{EMAIL}</a>
+        <span class="ft-line ft-top"><Icon name="location_on" size={24} color="#F9DF9D" />{ADDRESS.street}<br />{ADDRESS.district} / {ADDRESS.city}</span>
+        <span class="ft-line"><Icon name="support_agent" size={24} color="#F9DF9D" />{HOURS}</span>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <span>© {new Date().getFullYear()} KIVRIM Ekmek. Tüm hakları saklıdır.</span>
+      <nav class="ft-legal" aria-label="Yasal">
+        <a href="/kvkk">KVKK Aydınlatma</a>
+        <a href="/cerez-politikasi">Çerez Politikası</a>
+        <a href="/mesafeli-satis-sozlesmesi">Mesafeli Satış Sözleşmesi</a>
+      </nav>
+    </div>
+  </div>
+</footer>

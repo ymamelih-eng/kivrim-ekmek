@@ -1,0 +1,5 @@
+---
+interface Props { name: string; size?: number; color?: string; class?: string; style?: string }
+const { name, size = 22, color, class: cls = '', style = '' } = Astro.props;
+---
+<span class={`icon ${cls}`} aria-hidden="true" style={`font-size:${size}px;${color ? `color:${color};` : ''}${style}`}>{name}</span>

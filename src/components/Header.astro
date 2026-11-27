@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { logo } from '../lib/images';
+import { NAV } from '../lib/site';
+const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+const active = (href: string) => here === href || here.startsWith(href + '/');
+---
+<header class="site-header" data-header>
+  <div class="hdr-in">
+    <a href="/" aria-label="KIVRIM ana sayfa" class="hdr-logo">
+      <Image src={logo('renkli')} alt="KIVRIM" data-m="logo" class="hdr-logo-img" width={400} widths={[200, 400]} sizes="200px" loading="eager" format="webp" />
+    </a>
+    <nav data-m="nav" class="hdr-nav" aria-label="Ana menü">
+      {NAV.map((n) => <a href={n.href} class:list={['hdr-link', { 'is-active': active(n.href) }]} aria-current={active(n.href) ? 'page' : undefined}>{n.label}</a>)}
+    </nav>
+    <div class="hdr-actions">
+      <button type="button" class="hdr-sq" aria-label="Ara" data-open-search><Icon name="search" size={26} /></button>
+      <a href="/hesabim" class="hdr-sq" aria-label="Hesabım" data-m="hide-s"><Icon name="person" size={26} /></a>
+      <button type="button" class="hdr-cart" data-shop data-open-cart aria-label="Sepeti aç">
+        <Icon name="shopping_bag" size={22} /><span data-m="hide-s">Sepet</span><span class="hdr-count" data-cart-count>0</span>
+      </button>
+      <button type="button" class="hdr-burger" aria-label="Menü" data-m="burger" data-open-menu aria-expanded="false" aria-controls="kv-menu"><Icon name="menu" size={28} /></button>
+    </div>
+  </div>
+</header>

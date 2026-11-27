@@ -1,0 +1,139 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import PageHead from '../components/PageHead.astro';
+import RecipeTile from '../components/RecipeTile.astro';
+import { getRecipes } from '../lib/catalog';
+import { EMAIL } from '../lib/site';
+const recipes = (await getRecipes()).slice(0, 3);
+const perks = [
+  { i: 'local_shipping', t: 'Sipariş takibi', d: 'Siparişinizin her adımını anlık izleyin.', bg: '#E6F2DA', c: '#087238' },
+  { i: 'replay', t: 'Hızlı tekrar sipariş', d: 'Sık aldığınız ürünleri tek dokunuşla yeniden sipariş edin.', bg: '#FDEBD9', c: '#C75F08' },
+  { i: 'favorite', t: 'Favori tarifler', d: 'Beğendiğiniz tarifleri kaydedin.', bg: '#FBF1D3', c: '#8A6410' },
+  { i: 'redeem', t: 'Üyelere özel fırsatlar', d: 'Yeni ürünlerden ilk siz haberdar olun.', bg: '#F3E7DA', c: '#A8401C' },
+];
+const menu = [['siparis', 'Siparişlerim', 'receipt_long'], ['adres', 'Adreslerim', 'home_pin'], ['bilgi', 'Hesap bilgileri', 'person'], ['fav', 'Favori tariflerim', 'favorite']];
+---
+<Base title="Hesabım | KIVRIM" description="Siparişlerinizi takip edin, adreslerinizi ve hesap bilgilerinizi yönetin." path="/hesabim" noindex breadcrumb={[{ name: 'Hesabım' }]}>
+  <PageHead bg="#F3ECDF" eyebrow="HESABIM" crumbs={[{ name: 'Hesabım' }]} lead="Siparişlerinizi takip edin, adreslerinizi yönetin ve favori tariflerinize tek yerden ulaşın.">
+    Hoş geldiniz<span class="em" style="color:#087238" data-hello>.</span>
+  </PageHead>
+
+  <!-- Giriş / üye ol -->
+  <section data-m="g2" class="wrap auth-grid" data-acc-guest>
+    <form class="auth" novalidate data-auth>
+      <div class="auth-tabs" data-tabs="auth" role="group" aria-label="Giriş veya üyelik">
+        <button type="button" class="is-on" data-tab="giris" aria-pressed="true">Giriş yap</button>
+        <button type="button" data-tab="kayit" aria-pressed="false">Üye ol</button>
+      </div>
+      <div data-m="gs" class="fgrid" style="gap:14px" data-tab-panel="auth" data-tab-key="kayit" hidden>
+        <label class="field-lg">Ad<input type="text" name="ad" placeholder="Ayşe" autocomplete="given-name" /></label>
+        <label class="field-lg">Soyad<input type="text" name="soyad" placeholder="Yılmaz" autocomplete="family-name" /></label>
+      </div>
+      <label class="field-lg">E-posta<input type="email" name="email" placeholder="ornek@eposta.com" autocomplete="email" required /></label>
+      <label class="field-lg">Şifre<input type="password" name="sifre" placeholder="••••••••" autocomplete="current-password" required minlength="6" /></label>
+      <label class="consent" style="font-size:14px;line-height:1.5" data-tab-panel="auth" data-tab-key="kayit" hidden><input type="checkbox" name="kvkk" /><span><a href="/kvkk">KVKK Aydınlatma Metni</a>’ni okudum, kampanyalardan haberdar olmak istiyorum.</span></label>
+      <button type="submit" class="btn btn-ink"><span data-tab-panel="auth" data-tab-key="giris">Giriş yap</span><span data-tab-panel="auth" data-tab-key="kayit" hidden>Üye ol</span><Icon name="arrow_forward" size={22} /></button>
+      <p class="form-status" role="status" hidden></p>
+      <span class="auth-forgot">Şifrenizi mi unuttunuz? <a href={`mailto:${EMAIL}`}>Bize yazın</a></span>
+    </form>
+    <div class="perks">
+      <h2>Üyelikle daha pratik.</h2>
+      {perks.map((p) => <div class="perk" style={`background:${p.bg}`}><span class="perk-ic" style={`color:${p.c}`}><Icon name={p.i} size={28} /></span><div><b>{p.t}</b><div>{p.d}</div></div></div>)}
+    </div>
+  </section>
+
+  <!-- Üye paneli (yalnızca demo modunda tarayıcıda simüle edilir) -->
+  <section data-m="g2" class="wrap acc-layout" data-acc-user hidden>
+    <aside data-m="sticky" class="acc-menu" data-acc-menu>
+      {menu.map(([k, t, i], n) => <button type="button" class:list={[{ 'is-on': n === 0 }]} data-sec={k}><Icon name={i} size={22} />{t}</button>)}
+      <button type="button" class="logout" data-logout><Icon name="logout" size={22} />Çıkış yap</button>
+    </aside>
+    <div>
+      <div class="acc-panel" data-panel="siparis" id="siparislerim"><h2>Siparişlerim</h2><div class="acc-panel" data-orders></div></div>
+      <div class="acc-panel" data-panel="adres" hidden>
+        <h2>Adreslerim</h2>
+        <div data-m="gs" class="fgrid" style="gap:16px">
+          <div class="addr is-def"><div class="addr-top"><b><Icon name="home" size={22} color="#087238" />Ev</b><span>Varsayılan</span></div><span>Ayşe Yılmaz · Atatürk Mah. Çiçek Sok. No:12 D:5, Ataşehir / İstanbul · 0 5__ ___ __ __</span></div>
+          <div class="addr"><div class="addr-top"><b><Icon name="work" size={22} color="#087238" />İş</b><span></span></div><span>Ayşe Yılmaz · Barbaros Mah. Begonya Sok. No:3, Ataşehir / İstanbul</span></div>
+          <button type="button" class="addr-new"><Icon name="add_location_alt" size={30} />Yeni adres ekle</button>
+        </div>
+      </div>
+      <div class="acc-panel" data-panel="bilgi" hidden>
+        <h2>Hesap bilgileri</h2>
+        <div data-m="gs" class="fgrid" style="gap:16px">
+          <label class="field-lg">Ad Soyad<input type="text" placeholder="Ayşe Yılmaz" /></label>
+          <label class="field-lg">Telefon<input type="tel" placeholder="0 5__ ___ __ __" /></label>
+          <label class="field-lg">E-posta<input type="email" placeholder="ayse@eposta.com" /></label>
+          <label class="field-lg">Doğum tarihi<input type="text" placeholder="gg.aa.yyyy" /></label>
+        </div>
+        <label class="consent" style="font-size:15px;align-items:center"><input type="checkbox" checked />Yeni ürün ve tariflerden e-posta ile haberdar olmak istiyorum.</label>
+        <button type="button" class="btn btn-ink" style="align-self:flex-start;padding:16px 24px">Değişiklikleri kaydet</button>
+      </div>
+      <div class="acc-panel" data-panel="fav" hidden>
+        <h2>Favori tariflerim</h2>
+        <div data-m="g3" class="grid3" style="gap:16px">{recipes.map((r) => <RecipeTile r={r} size="md" fav />)}</div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { DATA, store } from '../scripts/app';
+  type Order = { no: string; date: string; status: string; total: string; count: number; desc: string };
+  const guest = document.querySelector<HTMLElement>('[data-acc-guest]')!;
+  const userBox = document.querySelector<HTMLElement>('[data-acc-user]')!;
+  const hello = document.querySelector<HTMLElement>('[data-hello]')!;
+  const form = document.querySelector<HTMLFormElement>('[data-auth]')!;
+  const st = form.querySelector<HTMLElement>('.form-status')!;
+
+  const SAMPLE: Order[] = [
+    { no: 'KV-2611-3920', date: '12 Kasım 2026', status: 'Teslim edildi', total: '₺164,70', count: 3, desc: 'Klasik Lavaş, Klasik Tortilla' },
+    { no: 'KV-2610-1184', date: '28 Ekim 2026', status: 'Teslim edildi', total: '₺319,40', count: 5, desc: 'Klasik Lavaş, Klasik Tortilla' },
+  ];
+  const STATUS: Record<string, [string, string, string]> = {
+    'Teslim edildi': ['#087238', '#E6F2DA', '100%'],
+    'Hazırlanıyor': ['#C75F08', '#FDEBD9', '30%'],
+    'Talep alındı': ['#C75F08', '#FDEBD9', '15%'],
+  };
+
+  const renderOrders = () => {
+    const mine = store.get<Order[]>('kv-orders', []);
+    const list = DATA.demo ? [...mine, ...SAMPLE] : mine;
+    document.querySelector('[data-orders]')!.innerHTML = list.length ? list.map((o) => {
+      const [c, bg, prog] = STATUS[o.status] || STATUS['Hazırlanıyor'];
+      return `<div class="order"><div class="order-l"><div class="order-top"><b>${o.no}</b><span class="order-st" style="background:${bg};color:${c}">${o.status}</span></div>
+        <span>${o.date} · ${o.count} ürün · ${o.desc}</span><div class="order-bar"><div style="width:${prog};background:${c}"></div></div></div>
+        <div class="order-r"><b>${o.total}</b><a href="/urunler">Tekrar sipariş ver</a></div></div>`;
+    }).join('') : '<p class="notice">Henüz siparişiniz yok.</p>';
+  };
+
+  const show = (user: { name: string } | null) => {
+    guest.hidden = !!user; userBox.hidden = !user;
+    hello.textContent = user ? `, ${user.name}.` : '.';
+    if (user) renderOrders();
+  };
+  const sec = (k: string) => {
+    document.querySelectorAll<HTMLElement>('[data-sec]').forEach((b) => b.classList.toggle('is-on', b.dataset.sec === k));
+    document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => (p.hidden = p.dataset.panel !== k));
+  };
+  document.querySelector('[data-acc-menu]')!.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest<HTMLElement>('[data-sec]'); if (b) sec(b.dataset.sec!);
+  });
+  document.querySelector('[data-logout]')!.addEventListener('click', () => { store.set('kv-user', null); show(null); });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) { st.hidden = false; st.dataset.state = 'error'; st.textContent = 'Lütfen e-posta ve şifrenizi (en az 6 karakter) girin.'; return; }
+    if (!DATA.demo) {
+      st.hidden = false; st.dataset.state = 'info';
+      st.textContent = 'Üyelik sistemi, online mağaza altyapısıyla birlikte devreye alınacak. Sorularınız için ' + DATA.form.email + ' adresine yazabilirsiniz.';
+      return;
+    }
+    const name = (form.elements.namedItem('ad') as HTMLInputElement).value.trim() || 'Ayşe';
+    store.set('kv-user', { name }); show({ name }); sec('siparis');
+  });
+
+  show(DATA.demo ? store.get<{ name: string } | null>('kv-user', null) : null);
+  if (location.hash === '#siparislerim' && !userBox.hidden) sec('siparis');
+</script>

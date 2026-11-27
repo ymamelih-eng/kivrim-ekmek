@@ -1,0 +1,43 @@
+---
+// Ana sayfa ürün kartı (paket ortada, pastel zemin) — "home" ve ürün listesi — "list" varyantı
+import Icon from './Icon.astro';
+import Pack from './Pack.astro';
+import { Image } from 'astro:assets';
+import { photo } from '../lib/images';
+import { fmt, upperTR } from '../lib/site';
+import { FAMILIES, type Product } from '../lib/catalog';
+interface Props { p: Product; variant?: 'home' | 'list' }
+const { p, variant = 'home' } = Astro.props;
+const href = `/urunler/${p.id}`;
+const range = upperTR(FAMILIES[p.family].title);
+---
+{variant === 'home' ? (
+  <article class="pc">
+    <div class="pc-media" style={`background:${p.tint}`}>
+      <Pack k={p.pack} alt={`${p.name} ambalajı`} class="pc-pack" widths={[280, 420, 560]} sizes="(max-width:900px) 60vw, 22vw" />
+    </div>
+    <div class="pc-row">
+      <div><span class="range-tag">{range}</span><h3 class="pc-name"><a href={href} class="stretch">{p.name}</a></h3></div>
+      <div class="pc-buy">
+        <span class="pc-price" data-shop>{fmt(p.price)}</span>
+        <button data-shop type="button" class="pc-add" aria-label={`${p.name} sepete ekle`} data-cart-add={p.id} data-n="1" data-open-after><Icon name="add_shopping_cart" size={24} /></button>
+      </div>
+    </div>
+  </article>
+) : (
+  <article class="pl">
+    <a href={href} class="pl-media" style={`background:${p.tint}`} aria-label={`${p.name} ürününü incele`} tabindex="-1">
+      <Image src={photo(p.cut)} alt="" width={420} class="pl-cut" format="webp" loading="lazy" />
+      <Pack k={p.pack} alt={`${p.name} ambalajı`} class="pl-pack" widths={[280, 420]} sizes="(max-width:900px) 45vw, 16vw" />
+    </a>
+    <div><span class="range-tag">{range}</span><h3 class="pl-name"><a href={href}>{p.name}</a></h3></div>
+    <p class="pl-d">{p.description}</p>
+    <div class="pl-foot">
+      <span class="pl-price" data-shop>{fmt(p.price)}</span>
+      <div class="pl-btns">
+        <a href={href} class="pl-btn-o">İncele</a>
+        <button data-shop type="button" class="pl-btn" data-cart-add={p.id} data-n="1" data-open-after aria-label={`${p.name} sepete ekle`}><Icon name="add_shopping_cart" size={20} />Ekle</button>
+      </div>
+    </div>
+  </article>
+)}

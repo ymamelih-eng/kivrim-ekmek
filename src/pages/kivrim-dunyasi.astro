@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import { SHOP_ENABLED } from '../lib/site';
+const values = [
+  { i: 'favorite', t: 'Sofraya saygı', d: 'Klasik lezzetin özünü koruyarak yeniliyoruz.' },
+  { i: 'tune', t: 'Esnek kullanım', d: 'Evden profesyonel mutfağa, farklı ihtiyaçlar için düşünülmüş ürünler.' },
+  { i: 'visibility', t: 'Şeffaflık', d: 'İçerik ve üretim bilgilerini açıkça paylaşıyoruz.' },
+];
+const roadmap = [
+  { n: '01', t: 'Reçete', d: 'Her çeşit için ayrı geliştirilen tarif.', dot: '#087238' },
+  { n: '02', t: 'Üretim', d: 'Kontrollü ve hijyenik süreç.', dot: '#72BF16' },
+  { n: '03', t: 'Paketleme', d: 'Tazeliği koruyan ambalaj.', dot: '#F47A12' },
+  { n: '04', t: 'Sofranız', d: SHOP_ENABLED ? 'Marketten ya da online mağazadan.' : 'Satış noktalarından ve iş ortaklarımızdan.', dot: '#7A2418' },
+];
+---
+<Base title="Hakkımızda – KIVRIM Dünyası" description="KIVRIM’ın hikâyesi, değerleri ve lavaştan sofranıza uzanan üretim yolculuğu." path="/kivrim-dunyasi" breadcrumb={[{ name: 'KIVRIM Dünyası' }]}
+  jsonLd={[{ '@context': 'https://schema.org', '@type': 'AboutPage', name: 'KIVRIM Dünyası', url: 'https://www.kivrimekmek.com/kivrim-dunyasi' }]}>
+  <section class="world-hero">
+    <Photo k="hamur-acma" alt="" loading="eager" fetchpriority="high" />
+    <div class="wrap world-in">
+      <nav class="crumbs" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a><span>/</span><b aria-current="page">KIVRIM Dünyası</b></nav>
+      <h1>Tanıdık ekmeği, <span class="em">bugünün sofrasına</span> göre yeniden düşünüyoruz.</h1>
+    </div>
+  </section>
+  <section data-m="g3" class="wrap values">
+    {values.map((v) => <div><span class="circle-ic"><Icon name={v.i} size={28} /></span><h3>{v.t}</h3><p>{v.d}</p></div>)}
+  </section>
+  <section class="wrap road-sec">
+    <h2 class="h-lg">Fırından sofranıza</h2>
+    <ol data-m="g4" class="road" style="list-style:none;margin:0;padding:0">
+      {roadmap.map((s) => <li><div><span class="road-dot" style={`background:${s.dot}`}></span></div><span class="road-n">{s.n}</span><h3>{s.t}</h3><p>{s.d}</p></li>)}
+    </ol>
+  </section>
+</Base>

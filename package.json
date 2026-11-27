@@ -1,0 +1,26 @@
+{
+  "name": "kivrim-ekmek",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "icons": "astro build && node scripts/icons.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.6",
+    "astro": "^7.4.13",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "simple-icons": "^16.38.1",
+    "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=22.23"
+  }
+}

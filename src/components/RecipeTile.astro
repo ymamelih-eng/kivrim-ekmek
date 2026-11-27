@@ -1,0 +1,17 @@
+---
+// Fotoğraflı tarif kutusu (ana sayfa 4/5, ürün detay ve onay sayfası 4/3)
+import Photo from './Photo.astro';
+import type { Recipe } from '../lib/catalog';
+interface Props { r: Recipe; ratio?: '4/5' | '4/3'; size?: 'lg' | 'md' | 'sm'; fav?: boolean }
+const { r, ratio = '4/5', size = 'lg', fav = false } = Astro.props;
+---
+<a href={`/tarifler/${r.id}`} class={`rt rt-${size}`} style={`aspect-ratio:${ratio}`}>
+  <Photo k={r.image} alt={r.title} class={r.cut ? 'rt-img rt-cut' : 'rt-img'} style={r.cut ? `background:${r.bg}` : undefined} sizes="(max-width:900px) 100vw, 33vw" widths={[480, 800]} />
+  <span class="rt-shade"></span>
+  {fav && <span class="rt-fav icon" aria-label="Favori">favorite</span>}
+  <span class="rt-txt">
+    {size === 'lg' && <span class="rt-chip">{r.category} · {r.minutes} dk</span>}
+    {size === 'md' && <span class="rt-meta">{r.category} · {r.minutes} dk</span>}
+    <span class="rt-t">{r.title}</span>
+  </span>
+</a>

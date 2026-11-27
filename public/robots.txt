@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /hesabim
+Disallow: /odeme
+Disallow: /siparis-onayi
+
+Sitemap: https://www.kivrimekmek.com/sitemap-index.xml

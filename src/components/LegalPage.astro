@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from './Icon.astro';
+import PageHead from './PageHead.astro';
+import HelpCard from './HelpCard.astro';
+import { render } from 'astro:content';
+import { getLegal } from '../lib/catalog';
+interface Props { path: string }
+const { path } = Astro.props;
+const all = await getLegal();
+const doc = all.find((d) => d.data.path === path)!;
+const { Content } = await render(doc);
+---
+<Base title={`${doc.data.title} | KIVRIM`} description={doc.data.lead} path={`/${path}`} breadcrumb={[{ name: doc.data.title }]}>
+  <PageHead bg="#FDEBD9" eyebrow="YASAL BİLGİLENDİRME" crumbs={[{ name: doc.data.title }]} lead={doc.data.lead}>{doc.data.title}</PageHead>
+  <section data-m="g2" class="wrap side-layout">
+    <aside data-m="sticky" class="side">
+      {all.map((d) => <a href={`/${d.data.path}`} class="ltab" aria-current={d.data.path === path ? 'page' : undefined}>{d.data.title}<Icon name="chevron_right" size={22} /></a>)}
+      <div class="side-spacer"></div>
+      <HelpCard />
+    </aside>
+    <article class="legal-art">
+      <span class="mono">Son güncelleme: {doc.data.updated}</span>
+      <div class="legal-body"><Content /></div>
+    </article>
+  </section>
+</Base>

@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import PageHead from '../components/PageHead.astro';
+import HelpCard from '../components/HelpCard.astro';
+import faq from '../data/faq.json';
+const slug = (s: string) => s.toLocaleLowerCase('tr-TR').replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c').replace(/[^a-z0-9]+/g, '-');
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faq.groups.flatMap((g) => g.items).map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.a } })),
+}];
+---
+<Base title="Sıkça Sorulan Sorular | KIVRIM" description="Lavaş ve tortilla ürünleri, sipariş, teslimat ve saklama hakkında sıkça sorulan sorular." path="/sss" breadcrumb={[{ name: 'Sıkça Sorulan Sorular' }]} jsonLd={jsonLd}>
+  <PageHead bg="#E6F2DA" eyebrow="YARDIM MERKEZİ" crumbs={[{ name: 'Sıkça Sorulan Sorular' }]} lead="Ürünler, sipariş, teslimat ve saklama hakkında merak ettikleriniz.">
+    Sıkça sorulan <span class="em" style="color:#087238">sorular.</span>
+  </PageHead>
+  <section data-m="g2" class="wrap side-layout">
+    <aside data-m="sticky" class="side" style="gap:10px">
+      {faq.groups.map((g) => <a href={`#${slug(g.title)}`} class="fgroup-tag" style={`background:${g.bg}`} data-no-wipe><Icon name={g.icon} size={24} color={g.color} />{g.title}</a>)}
+      <div class="side-spacer"></div>
+      <HelpCard />
+    </aside>
+    <div class="fgroups">
+      {faq.groups.map((g) => (
+        <div class="fgroup" id={slug(g.title)}>
+          <h2><span class="fgroup-ic" style={`background:${g.bg};color:${g.color}`}><Icon name={g.icon} size={28} /></span>{g.title}</h2>
+          <div class="acc">
+            {g.items.map((q) => <details><summary>{q.q}<Icon name="add_circle" size={26} /></summary><p>{q.a}</p></details>)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

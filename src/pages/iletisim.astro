@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Social from '../components/Social.astro';
+import { EMAIL, ADDRESS_LINE, HOURS, SITE_URL, ADDRESS } from '../lib/site';
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'ContactPage', name: 'İletişim', url: SITE_URL + '/iletisim',
+  mainEntity: { '@type': 'Organization', name: 'KIVRIM', email: EMAIL,
+    address: { '@type': 'PostalAddress', streetAddress: ADDRESS.street, addressLocality: ADDRESS.district, addressRegion: ADDRESS.city, addressCountry: 'TR' },
+    contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', email: EMAIL, availableLanguage: 'Turkish' } },
+}];
+---
+<Base title="İletişim | KIVRIM" description={`KIVRIM ile iletişime geçin: ${EMAIL} · ${ADDRESS_LINE}.`} path="/iletisim" breadcrumb={[{ name: 'İletişim' }]} jsonLd={jsonLd}>
+  <section data-m="g2" class="wrap contact">
+    <div class="contact-l">
+      <nav class="crumbs crumb-mono" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a><span>/</span><b aria-current="page">İletişim</b></nav>
+      <h1>Merhaba <span class="em">deyin.</span></h1>
+      <p>Sorularınız, önerileriniz ve basın talepleriniz için bize yazın.</p>
+      <div class="channels">
+        <div class="channel"><span class="channel-ic"><Icon name="mail" size={26} /></span><div><b>E-posta</b><a href={`mailto:${EMAIL}`}>{EMAIL}</a></div></div>
+        <div class="channel"><span class="channel-ic"><Icon name="location_on" size={26} /></span><div><b>Adres</b><div>{ADDRESS_LINE}</div></div></div>
+        <div class="channel"><span class="channel-ic"><Icon name="schedule" size={26} /></span><div><b>Çalışma saatleri</b><div>{HOURS}</div></div></div>
+      </div>
+      <Social variant="contact" />
+    </div>
+    <form class="fcard cream" data-kv-form="İletişim formu" novalidate>
+      <div data-m="gs" class="fgrid">
+        <label class="field">Ad soyad<input name="ad" data-label="Ad soyad" required autocomplete="name" /></label>
+        <label class="field">E-posta<input type="email" name="email" data-label="E-posta" required autocomplete="email" /></label>
+      </div>
+      <label class="field">Konu<input name="konu" data-label="Konu" data-konu /></label>
+      <label class="field">Mesajınız<textarea name="mesaj" data-label="Mesaj" rows="5" required></textarea></label>
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true" />
+      <label class="consent"><input type="checkbox" name="kvkk" data-label="KVKK onayı" value="Evet" required /><span><a href="/kvkk" target="_blank">KVKK Aydınlatma Metni</a>’ni okudum, onaylıyorum.</span></label>
+      <button type="submit" class="btn-submit">Gönder<span class="icon" aria-hidden="true" style="font-size:24px">send</span></button>
+      <p class="form-status" role="status" hidden></p>
+    </form>
+  </section>
+</Base>
+<script>
+  const k = new URLSearchParams(location.search).get('konu');
+  const i = document.querySelector<HTMLInputElement>('[data-konu]');
+  if (k && i) i.value = k;
+</script>

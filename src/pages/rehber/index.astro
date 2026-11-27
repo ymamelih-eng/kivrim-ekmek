@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Photo from '../../components/Photo.astro';
+import PageHead from '../../components/PageHead.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getArticles } from '../../lib/catalog';
+import { SITE_URL, upperTR } from '../../lib/site';
+const arts = await getArticles();
+const [a0, ...rest] = arts;
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'Blog', name: 'Lavaş Rehberi', url: SITE_URL + '/rehber', inLanguage: 'tr-TR',
+  blogPost: arts.map((a) => ({ '@type': 'BlogPosting', headline: a.data.title, url: `${SITE_URL}/rehber/${a.id}`, datePublished: a.data.date.toISOString().slice(0, 10) })),
+}];
+---
+<Base title="Lavaş Rehberi – Saklama, Isıtma ve Sarma Teknikleri | KIVRIM" description="Lavaş ve tortilla hakkında bilmeniz gerekenler: farklar, saklama yöntemleri, dürüm sarma teknikleri ve kahvaltı fikirleri." path="/rehber" breadcrumb={[{ name: 'Rehber' }]} jsonLd={jsonLd} ogPhoto={a0.data.image}>
+  <PageHead bg="#FBF1D3" eyebrow="LAVAŞ REHBERİ" crumbs={[{ name: 'Rehber' }]} lead="Saklama, ısıtma, sarma teknikleri ve sofra fikirleri: unlu mamulleri daha iyi tanımanız için hazırladığımız rehber yazılar.">
+    Lavaş ve tortilla hakkında <span class="em" style="color:#A8401C">her şey.</span>
+  </PageHead>
+  <section class="wrap guide">
+    <a href={`/rehber/${a0.id}`} data-m="g2" class="gfeat" style={`background:${a0.data.bg}`}>
+      <span class="gfeat-img"><Photo k={a0.data.image} alt={a0.data.title} sizes="(max-width:900px) 100vw, 58vw" loading="eager" /></span>
+      <span class="gfeat-tx">
+        <span class="gfeat-k">ÖNE ÇIKAN · {upperTR(a0.data.category)}</span>
+        <span class="gfeat-t">{a0.data.title}</span>
+        <span class="gfeat-d">{a0.data.description}</span>
+        <span class="gfeat-go">Yazıyı oku<Icon name="arrow_forward" size={22} /></span>
+      </span>
+    </a>
+    <div data-m="g3" class="grid3">
+      {rest.map((a) => <ArticleCard a={a} showDesc />)}
+    </div>
+  </section>
+</Base>

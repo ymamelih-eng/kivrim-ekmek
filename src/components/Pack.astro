@@ -1,0 +1,8 @@
+---
+// Ambalaj görseli (şeffaf PNG, oran 1122/1402) — prototipteki "center bottom / contain" arka plan sprite'ının <img> karşılığı.
+import { Image } from 'astro:assets';
+import { pack } from '../lib/images';
+interface Props { k: string; alt?: string; width?: number; class?: string; style?: string; loading?: 'lazy' | 'eager'; widths?: number[]; sizes?: string }
+const { k, alt = 'KIVRIM ambalajı', width = 560, class: cls = '', style, loading = 'lazy', widths, sizes } = Astro.props;
+---
+<Image src={pack(k)} alt={alt} width={width} class={`pack-img ${cls}`} style={style} loading={loading} widths={widths} sizes={sizes} format="webp" quality={82} />

@@ -1,0 +1,10 @@
+---
+import Icon from './Icon.astro';
+import { EMAIL, HOURS } from '../lib/site';
+---
+<div class="help">
+  <Icon name="support_agent" size={32} color="#F9DF9D" />
+  <b>Yardıma mı ihtiyacınız var?</b>
+  <span>{HOURS} arasında yanıtlıyoruz.</span>
+  <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+</div>

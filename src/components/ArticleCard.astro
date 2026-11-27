@@ -1,0 +1,15 @@
+---
+import Photo from './Photo.astro';
+import { upperTR } from '../lib/site';
+import type { Article } from '../lib/catalog';
+interface Props { a: Article; showDesc?: boolean }
+const { a, showDesc = false } = Astro.props;
+---
+<a href={`/rehber/${a.id}`} class="ac" style={`background:${a.data.bg}`}>
+  <span class="ac-img"><Photo k={a.data.image} alt={a.data.title} sizes="(max-width:900px) 100vw, 33vw" widths={[480, 800]} /></span>
+  <span class="ac-body">
+    <span class="ac-cat">{upperTR(a.data.category)}<span class="ac-min">{a.data.readMinutes} dk</span></span>
+    <span class="ac-t">{a.data.title}</span>
+    {showDesc && <span class="ac-d">{a.data.description}</span>}
+  </span>
+</a>

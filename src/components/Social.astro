@@ -1,0 +1,12 @@
+---
+import { SOCIALS } from '../lib/site';
+interface Props { variant: 'footer' | 'contact' | 'menu' }
+const { variant } = Astro.props;
+---
+<div class={`social social-${variant}`}>
+  {SOCIALS.map((s) => (
+    <a href={s.href} aria-label={s.name} rel="noopener" class="social-a">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="#fff"><path d={s.path} /></svg>
+    </a>
+  ))}
+</div>

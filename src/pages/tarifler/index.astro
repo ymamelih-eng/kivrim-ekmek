@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Photo from '../../components/Photo.astro';
+import { getProducts, getRecipes, recipeLevel } from '../../lib/catalog';
+import { SITE_URL } from '../../lib/site';
+const recipes = await getRecipes();
+const products = await getProducts();
+const pname = (id: string) => products.find((p) => p.id === id)?.name ?? '';
+const featured = recipes.find((r) => r.id === 'tavuklu-wrap') ?? recipes[0];
+const cats = ['Tümü', 'Kahvaltı', 'Öğle', 'Akşam', 'Atıştırmalık'];
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'ItemList', name: 'Lavaş ve Tortilla Tarifleri',
+  itemListElement: recipes.map((r, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE_URL}/tarifler/${r.id}`, name: r.title })),
+}];
+---
+<Base title="Lavaş ve Tortilla Tarifleri | KIVRIM" description="Dürüm, wrap, quesadilla ve lavaş pizza: kahvaltıdan akşam yemeğine pratik lavaş ve tortilla tarifleri." path="/tarifler" breadcrumb={[{ name: 'Tarifler' }]} jsonLd={jsonLd} ogPhoto="peynirli-durum">
+  <section class="ihead">
+    <div class="ihead-img"><Photo k="peynirli-durum" alt="" sizes="50vw" loading="eager" /></div>
+    <div class="wrap ihead-in rec">
+      <nav class="crumbs" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a><span>/</span><b aria-current="page">Tarifler</b></nav>
+      <h1>Tarifler</h1>
+      <p>Lavaş ve tortillayla pratik, lezzetli ve hızlı fikirler.</p>
+      <div class="chips" data-tabs="recipes" role="group" aria-label="Kategori filtresi">
+        {cats.map((c, i) => <button type="button" class:list={[{ 'is-on': i === 0 }]} data-tab={i === 0 ? '*' : c} aria-pressed={i === 0 ? 'true' : 'false'}>{c}</button>)}
+      </div>
+    </div>
+  </section>
+  <section class="wrap feat-rec-sec">
+    <a data-m="g2" href={`/tarifler/${featured.id}`} class="feat-rec">
+      <div class="feat-rec-img"><Photo k={featured.image} alt={featured.title} sizes="(max-width:900px) 100vw, 55vw" /></div>
+      <div class="feat-rec-tx">
+        <span class="stamp">HAFTANIN TARİFİ</span>
+        <h2>{featured.title}</h2>
+        <p>{featured.intro}</p>
+        <div class="meta-row">
+          <span><Icon name="schedule" size={22} color="#F9DF9D" />{featured.minutes} dk</span>
+          <span><Icon name="group" size={22} color="#F9DF9D" />{featured.servings} kişilik</span>
+          <span><Icon name="bakery_dining" size={22} color="#F9DF9D" />{pname(featured.product)}</span>
+        </div>
+        <span class="go-chip">Tarife git<Icon name="arrow_forward" size={20} /></span>
+      </div>
+    </a>
+  </section>
+  <section class="wrap rgrid">
+    {recipes.map((r) => (
+      <a href={`/tarifler/${r.id}`} class="rc" data-tab-panel="recipes" data-tab-key={r.category}>
+        <div class="rc-media" style={`background:${r.bg}`}>
+          <Photo k={r.image} alt={r.title} class={r.cut ? 'rc-cut' : undefined} sizes="(max-width:700px) 100vw, 400px" widths={[480, 800]} />
+          <span class="rc-c">{r.category}</span>
+          <span class="rc-m">{r.minutes} dk</span>
+          <span class="rc-l">{recipeLevel(r)}</span>
+        </div>
+        <h3>{r.title}</h3>
+        <div class="rc-meta"><span><Icon name="schedule" size={22} />{r.minutes} dk</span><span><Icon name="bakery_dining" size={22} />{pname(r.product)}</span></div>
+      </a>
+    ))}
+  </section>
+</Base>

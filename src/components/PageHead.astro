@@ -1,0 +1,16 @@
+---
+// Pastel zeminli sayfa başlığı (SSS, Rehber, Yasal, Hesabım)
+interface Props { bg: string; eyebrow: string; crumbs: { name: string; href?: string }[]; lead?: string }
+const { bg, eyebrow, crumbs, lead } = Astro.props;
+---
+<section style={`background:${bg}`}>
+  <div class="wrap ph">
+    <nav class="crumbs" aria-label="Sayfa yolu">
+      <a href="/">Ana sayfa</a>
+      {crumbs.map((c) => (<><span aria-hidden="true">/</span>{c.href ? <a href={c.href}>{c.name}</a> : <b aria-current="page">{c.name}</b>}</>))}
+    </nav>
+    <span class="eyebrow">{eyebrow}</span>
+    <h1 class="ph-h"><slot /></h1>
+    {lead && <p class="ph-lead">{lead}</p>}
+  </div>
+</section>
